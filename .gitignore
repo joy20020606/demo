@@ -20,7 +20,9 @@ venv/
 env/
 
 # 編輯器暫存
-.vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
 .idea/
 *.suo
 *.ntvs*
