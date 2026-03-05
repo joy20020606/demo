@@ -2,6 +2,12 @@
 node_modules/
 dist/
 .env
+.env.*
+
+# Node / Yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # C# 相關
 bin/
@@ -20,3 +26,7 @@ env/
 *.ntvs*
 *.njsproj
 *.sln
+
+# 作業系統快取
+Thumbs.db
+.DS_Store
