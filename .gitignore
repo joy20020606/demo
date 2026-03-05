@@ -1,0 +1,22 @@
+# Node 相關
+node_modules/
+dist/
+.env
+
+# C# 相關
+bin/
+obj/
+
+# Python 相關
+__pycache__/
+*.pyc
+venv/
+env/
+
+# 編輯器暫存
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
