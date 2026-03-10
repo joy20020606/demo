@@ -16,8 +16,11 @@ obj/
 # Python 相關
 __pycache__/
 *.pyc
+.venv/
 venv/
 env/
+build/
+*.spec
 
 # 編輯器暫存
 .vscode/*
