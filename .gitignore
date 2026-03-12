@@ -35,3 +35,6 @@ build/
 # 作業系統快取
 Thumbs.db
 .DS_Store
+
+# Claude Code 設定（含 API Key）
+.claude/settings.json
