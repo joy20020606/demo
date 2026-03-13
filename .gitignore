@@ -32,6 +32,11 @@ build/
 *.njsproj
 *.sln
 
+# Visual Studio
+.vs/
+*.vcxproj.user
+out/
+
 # 作業系統快取
 Thumbs.db
 .DS_Store
