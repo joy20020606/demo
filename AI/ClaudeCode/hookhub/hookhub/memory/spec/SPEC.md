@@ -1,9 +1,9 @@
 # HookHub — Product Specification (MVP)
 
-## Overview
+## Overview .
 HookHub is a curated directory of open-source cloud hooks. Users can browse and discover hooks sourced from GitHub repositories, organized by category.
 
-## What is a "Cloud Hook"?
+## What is a "Cloud Hook"? 
 A cloud hook is a reusable automation trigger or webhook integration designed for cloud platforms and DevOps pipelines. Examples include:
 - GitHub / GitLab webhooks
 - Serverless function triggers (AWS Lambda, Vercel, Netlify)
