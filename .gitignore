@@ -42,3 +42,4 @@ Thumbs.db
 
 # Claude Code 設定（含 API Key）
 .claude/settings.json
+.claude/settings.local.json
