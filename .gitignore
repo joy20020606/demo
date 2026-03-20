@@ -44,4 +44,32 @@ Thumbs.db
 .claude/settings.json
 
 .claude/settings.local.json
+
+
+# Visual Studio / C++
+.vs/
+*.vcxproj.user
+*.suo
+
+# Build outputs
+x64/
+Debug/
+Release/
+demo_api1/x64/
+
+# C/C++ intermediate & debug files
+*.obj
+*.o
+*.idb
+*.pdb
+*.ilk
+*.ipch
+*.tlog
+*.lastbuildstate
+*.recipe
+*.log
+*.FileListAbsolute.txt
+
+# Optional: runtime output
+demo_output.txt
  
