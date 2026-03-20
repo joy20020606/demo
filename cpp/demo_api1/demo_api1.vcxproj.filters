@@ -27,6 +27,36 @@
     <ClCompile Include="feature3_http_server.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="feature4_fibonacci.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature5_primes.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature6_string_reverse.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature7_simple_vector.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature8_bank_account.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature9_shapes.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature10_parentheses.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature11_linked_list.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature12_binary_search.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="feature13_sorting.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="feature1_http_rest.h">
@@ -36,6 +66,36 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="feature3_http_server.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature4_fibonacci.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature5_primes.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature6_string_reverse.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature7_simple_vector.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature8_bank_account.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature9_shapes.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature10_parentheses.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature11_linked_list.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature12_binary_search.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="feature13_sorting.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

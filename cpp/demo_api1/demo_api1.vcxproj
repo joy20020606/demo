@@ -125,14 +125,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="demo_api1.cpp" />
+    <ClCompile Include="feature10_parentheses.cpp" />
+    <ClCompile Include="feature11_linked_list.cpp" />
+    <ClCompile Include="feature12_binary_search.cpp" />
+    <ClCompile Include="feature13_sorting.cpp" />
     <ClCompile Include="feature1_http_rest.cpp" />
     <ClCompile Include="feature2_win_api.cpp" />
     <ClCompile Include="feature3_http_server.cpp" />
+    <ClCompile Include="feature4_fibonacci.cpp" />
+    <ClCompile Include="feature5_primes.cpp" />
+    <ClCompile Include="feature6_string_reverse.cpp" />
+    <ClCompile Include="feature7_simple_vector.cpp" />
+    <ClCompile Include="feature8_bank_account.cpp" />
+    <ClCompile Include="feature9_shapes.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="feature10_parentheses.h" />
+    <ClInclude Include="feature11_linked_list.h" />
+    <ClInclude Include="feature12_binary_search.h" />
+    <ClInclude Include="feature13_sorting.h" />
     <ClInclude Include="feature1_http_rest.h" />
     <ClInclude Include="feature2_win_api.h" />
     <ClInclude Include="feature3_http_server.h" />
+    <ClInclude Include="feature4_fibonacci.h" />
+    <ClInclude Include="feature5_primes.h" />
+    <ClInclude Include="feature6_string_reverse.h" />
+    <ClInclude Include="feature7_simple_vector.h" />
+    <ClInclude Include="feature8_bank_account.h" />
+    <ClInclude Include="feature9_shapes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
