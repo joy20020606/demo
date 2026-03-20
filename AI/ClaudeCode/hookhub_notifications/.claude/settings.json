@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -Command \"uv run \\\"$([Environment]::GetFolderPath('MyDocuments'))/00_demo/AI/ClaudeCode/hookhub_notifications/play_sound.py\\\"\""
+          }
+        ]
+      }
+    ]
+  }
+}
