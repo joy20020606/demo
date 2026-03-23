@@ -47,6 +47,3 @@ pyinstaller --onefile --name FormatFerry main.py
 ## Git 與忽略規則
 
 根目錄已提供 `.gitignore`，已包含 Python 打包常見輸出（如 `.venv/`、`build/`、`*.spec`）。
-
-
-測試CC PR 機器人
