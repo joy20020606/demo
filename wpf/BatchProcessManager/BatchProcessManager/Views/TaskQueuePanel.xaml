@@ -1,0 +1,173 @@
+<UserControl x:Class="BatchProcessManager.Views.TaskQueuePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:BatchProcessManager.Converters"
+             xmlns:models="clr-namespace:BatchProcessManager.Models">
+
+    <UserControl.Resources>
+        <conv:PriorityToColorConverter x:Key="PriorityToColor"/>
+        <conv:BatchTaskStatusToColorConverter x:Key="StatusToColor"/>
+        <ObjectDataProvider x:Key="PriorityValues" MethodName="GetValues" ObjectType="{x:Type models:TaskPriority}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:TaskPriority"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource BackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="12,12,6,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                    <TextBlock Text="任務佇列" Style="{StaticResource SectionTitleStyle}" DockPanel.Dock="Left"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="加入範例" Command="{Binding AddSampleTasksCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,6,0"/>
+                        <Button Content="依優先排序" Command="{Binding SortByPriorityCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,6,0"/>
+                        <Button Content="清除完成" Command="{Binding ClearCompletedCommand}"
+                                Style="{StaticResource DangerButtonStyle}"/>
+                    </StackPanel>
+                </DockPanel>
+
+                <TextBlock Grid.Row="1" Margin="0,0,0,6" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12">
+                    <Run Text="共 "/>
+                    <Run Text="{Binding Tasks.Count, Mode=OneWay}"/>
+                    <Run Text=" 個任務"/>
+                </TextBlock>
+
+                <ListView Grid.Row="2" ItemsSource="{Binding Tasks}"
+                          SelectedItem="{Binding SelectedTask}"
+                          BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ID" Width="70">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Id}" FontFamily="Consolas" FontSize="11"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="任務名稱" Width="160">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" FontWeight="Medium"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="優先" Width="60">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="3" Padding="4,1"
+                                                Background="{Binding Priority, Converter={StaticResource PriorityToColor}}">
+                                            <TextBlock Text="{Binding PriorityText}" Foreground="White" FontSize="11"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="狀態" Width="70">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StatusText}"
+                                                   Foreground="{Binding Status, Converter={StaticResource StatusToColor}}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="時長(s)" Width="60">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DurationSeconds}" HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="進度" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ProgressBar Value="{Binding Progress, Mode=OneWay}"
+                                                     Maximum="100" Height="8" Width="90"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="操作" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="↑" Width="24" Height="22" Margin="0,0,2,0" FontSize="12"
+                                                    Command="{Binding DataContext.MoveUpCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}"/>
+                                            <Button Content="↓" Width="24" Height="22" Margin="0,0,2,0" FontSize="12"
+                                                    Command="{Binding DataContext.MoveDownCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}"/>
+                                            <Button Content="✕" Width="24" Height="22" FontSize="11" Foreground="White" Background="#F44336"
+                                                    Command="{Binding DataContext.RemoveTaskCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" CornerRadius="3">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="6,12,12,12">
+            <StackPanel>
+                <TextBlock Text="新增任務" Style="{StaticResource SectionTitleStyle}"/>
+
+                <TextBlock Text="任務名稱" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                <TextBox Text="{Binding NewTaskName, UpdateSourceTrigger=PropertyChanged}"
+                         Padding="6,5" Margin="0,0,0,10" BorderBrush="{StaticResource BorderBrush}"/>
+
+                <TextBlock Text="描述" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                <TextBox Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}"
+                         Padding="6,5" Margin="0,0,0,10" BorderBrush="{StaticResource BorderBrush}"
+                         AcceptsReturn="True" Height="50"/>
+
+                <TextBlock Text="優先順序" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                <ComboBox ItemsSource="{Binding Priorities}"
+                          SelectedItem="{Binding NewTaskPriority}"
+                          Padding="6,5" Margin="0,0,0,10">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="10" Height="10" CornerRadius="5" Margin="0,0,6,0"
+                                        Background="{Binding Converter={StaticResource PriorityToColor}}"/>
+                                <TextBlock Text="{Binding}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock Text="執行時長 (秒)" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Slider Minimum="1" Maximum="15" Value="{Binding NewTaskDuration}"
+                            Width="180" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding NewTaskDuration}" Margin="8,0,0,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                </StackPanel>
+
+                <Button Content="新增任務" Command="{Binding AddTaskCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Stretch"
+                        Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,42 @@
+<UserControl x:Class="ImageInspector.Views.ImageCanvas"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Background="#1E1E1E"
+             ClipToBounds="True">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer x:Name="ScrollView"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      Background="Transparent"
+                      PreviewMouseWheel="ScrollView_PreviewMouseWheel">
+            <Grid x:Name="ContentGrid"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+                <Image x:Name="MainImage"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       Stretch="None"/>
+                <Canvas x:Name="AnnotationCanvas"
+                        Background="Transparent"
+                        MouseLeftButtonDown="AnnotationCanvas_MouseLeftButtonDown"
+                        MouseMove="AnnotationCanvas_MouseMove"
+                        MouseLeftButtonUp="AnnotationCanvas_MouseLeftButtonUp"
+                        Cursor="Cross"/>
+            </Grid>
+        </ScrollViewer>
+
+        <TextBlock Text="請載入影像 (File → 載入影像)"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Foreground="#666666"
+                   FontSize="16"
+                   x:Name="PlaceholderText"/>
+    </Grid>
+</UserControl>

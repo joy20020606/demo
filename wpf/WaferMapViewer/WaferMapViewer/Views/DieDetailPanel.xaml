@@ -1,0 +1,70 @@
+<UserControl x:Class="WaferMapViewer.Views.DieDetailPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:WaferMapViewer.Converters">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:ResultToColorConverter x:Key="ResultToColor"/>
+        <Style TargetType="TextBlock" x:Key="LabelStyle">
+            <Setter Property="Foreground" Value="#888"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="ValueStyle">
+            <Setter Property="Foreground" Value="#EEE"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#1A1A2E">
+        <StackPanel Margin="12">
+            <TextBlock Text="Die Detail" FontSize="14" FontWeight="Bold"
+                       Foreground="#9090C0" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Click on a die to see details"
+                       Foreground="#555" FontSize="12" FontStyle="Italic"
+                       Visibility="{Binding HasSelection, Converter={StaticResource BoolToVis}, ConverterParameter=Inverse}"/>
+
+            <StackPanel Visibility="{Binding HasSelection, Converter={StaticResource BoolToVis}}">
+                <TextBlock Text="Position (Row, Col)" Style="{StaticResource LabelStyle}"/>
+                <TextBlock Text="{Binding RowCol}" Style="{StaticResource ValueStyle}"/>
+
+                <TextBlock Text="Result" Style="{StaticResource LabelStyle}"/>
+                <Border CornerRadius="3" Padding="6,2" HorizontalAlignment="Left" Margin="0,2"
+                        Background="{Binding SelectedDie.Result, Converter={StaticResource ResultToColor}}">
+                    <TextBlock Text="{Binding Result}" Foreground="White" FontWeight="SemiBold" FontSize="12"/>
+                </Border>
+
+                <TextBlock Text="Edge Die" Style="{StaticResource LabelStyle}"/>
+                <TextBlock Text="{Binding IsEdge}" Style="{StaticResource ValueStyle}"/>
+
+                <TextBlock Text="Defect Density" Style="{StaticResource LabelStyle}"/>
+                <TextBlock Text="{Binding DefectDensity}" Style="{StaticResource ValueStyle}"/>
+
+                <TextBlock Text="Description" Style="{StaticResource LabelStyle}"/>
+                <TextBlock Text="{Binding Description}" Style="{StaticResource ValueStyle}"
+                           TextWrapping="Wrap" FontSize="11"/>
+
+                <Separator Background="#333" Margin="0,8"/>
+
+                <TextBlock Text="Measurements" Style="{StaticResource LabelStyle}" Margin="0,0,0,4"/>
+                <ItemsControl ItemsSource="{Binding Measurements}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Key}"
+                                           Foreground="#888" FontSize="11"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Value}"
+                                           Foreground="#CCC" FontSize="11"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

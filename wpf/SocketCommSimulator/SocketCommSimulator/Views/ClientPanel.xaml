@@ -1,0 +1,72 @@
+<UserControl x:Class="SocketCommSimulator.Views.ClientPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:SocketCommSimulator.Converters"
+             xmlns:models="clr-namespace:SocketCommSimulator.Models"
+             xmlns:local="clr-namespace:SocketCommSimulator.Views">
+
+    <UserControl.Resources>
+        <converters:ConnectionStateToColorConverter x:Key="StateToColor"/>
+        <converters:InverseBoolConverter x:Key="InverseBool"/>
+    </UserControl.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Header="Client 設定" Margin="0,0,0,8">
+            <Grid Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="IP:"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Connection.IpAddress}"/>
+                <Label Grid.Row="0" Grid.Column="2" Content="Port:"/>
+                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Connection.Port}"/>
+                <Button Grid.Row="0" Grid.Column="4" Content="連線" Command="{Binding ConnectCommand}"/>
+                <Button Grid.Row="0" Grid.Column="5" Content="斷線" Command="{Binding DisconnectCommand}"/>
+
+                <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6"
+                          Content="自動重連" IsChecked="{Binding AutoReconnect}" Margin="0,4,0,0"/>
+            </Grid>
+        </GroupBox>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+            <Ellipse Width="12" Height="12"
+                     Fill="{Binding Connection.State, Converter={StaticResource StateToColor}}"
+                     Margin="0,0,6,0" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Connection.StatusText}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <GroupBox Grid.Row="2" Header="傳送訊息" Margin="0,0,0,8">
+            <Grid Margin="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding SendCommand}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+                <Button Grid.Column="1" Content="傳送" Command="{Binding SendCommand}"/>
+            </Grid>
+        </GroupBox>
+
+        <local:LogPanel Grid.Row="3" DataContext="{Binding Log}"/>
+    </Grid>
+</UserControl>

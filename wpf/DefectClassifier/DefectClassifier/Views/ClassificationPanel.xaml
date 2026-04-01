@@ -1,0 +1,160 @@
+<UserControl x:Class="DefectClassifier.Views.ClassificationPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="#252526">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#2D2D2D" BorderBrush="#3C3C3C" BorderThickness="0,0,0,1" Padding="16,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="分類策略：" VerticalAlignment="Center" Foreground="#AAAAAA" FontSize="13"/>
+                    <ComboBox Width="160" Margin="8,0,0,0"
+                              ItemsSource="{Binding Strategies}"
+                              SelectedItem="{Binding SelectedStrategy}"
+                              Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" Foreground="#CCCCCC" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Description}" Foreground="#888888" FontSize="10"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="執行分類" Command="{Binding RunClassificationCommand}"
+                            Style="{StaticResource DarkButton}" Background="#0E6BA8" BorderBrush="#1A7FBC"
+                            FontWeight="Bold" Padding="14,6" Margin="0,0,8,0"/>
+                    <Button Content="套用結果至資料庫" Command="{Binding ApplyClassificationCommand}"
+                            Style="{StaticResource DarkButton}" Background="#1E7A4A" BorderBrush="#27AE60"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="280"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Padding="12,8" Foreground="#888888" FontSize="11"
+                           Text="{Binding Results.Count, StringFormat=分類建議結果：共 {0} 筆}"/>
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding Results}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          Background="#1E1E1E"
+                          Foreground="#CCCCCC"
+                          BorderBrush="#3C3C3C"
+                          RowBackground="#1E1E1E"
+                          AlternatingRowBackground="#252526"
+                          GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="#3C3C3C"
+                          HeadersVisibility="Column"
+                          SelectionMode="Single">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#2D2D2D"/>
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Setter Property="Padding" Value="8,5"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="BorderBrush" Value="#3C3C3C"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                        </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="8,4"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#094771"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="缺陷ID" Width="70" Binding="{Binding DefectId}"/>
+                        <DataGridTemplateColumn Header="建議類型" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="4,0">
+                                        <Border Width="10" Height="10" CornerRadius="2" Margin="0,0,6,0" VerticalAlignment="Center"
+                                                Background="{Binding SuggestedType, Converter={StaticResource DefectTypeToColorConverter}}"/>
+                                        <TextBlock Text="{Binding SuggestedType, Converter={StaticResource DefectTypeToStringConverter}}"
+                                                   Foreground="#CCCCCC" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="信心度" Width="80"
+                                            Binding="{Binding Confidence, StringFormat={}{0:P0}}"/>
+                        <DataGridTextColumn Header="使用策略" Width="*" Binding="{Binding StrategyName}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#3C3C3C"/>
+
+            <ScrollViewer Grid.Column="2" Background="#2D2D2D" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="14">
+                    <TextBlock Text="使用說明" Foreground="#FFFFFF" FontWeight="Bold" FontSize="13" Margin="0,0,0,10"/>
+
+                    <Border Background="#1A3A1A" CornerRadius="4" Padding="10" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock Text="尺寸分類策略" Foreground="#2ECC71" FontWeight="Bold" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Foreground="#AAAAAA" FontSize="11" LineHeight="18">
+                                <Run Text="• 線性(長寬比&gt;5)→ 刮傷"/>
+                                <LineBreak/><Run Text="• 面積 &lt;10 → 粒子"/>
+                                <LineBreak/><Run Text="• 面積 &lt;100 → 坑洞"/>
+                                <LineBreak/><Run Text="• 面積 &lt;500 → 圖案缺陷"/>
+                                <LineBreak/><Run Text="• 面積 ≥500 → 橋接"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="#1A1A3A" CornerRadius="4" Padding="10" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock Text="位置分類策略" Foreground="#3498DB" FontWeight="Bold" FontSize="12" Margin="0,0,0,4"/>
+                            <TextBlock TextWrapping="Wrap" Foreground="#AAAAAA" FontSize="11" LineHeight="18">
+                                <Run Text="• 距中心 &lt;30 → 圖案缺陷"/>
+                                <LineBreak/><Run Text="• 距中心 &lt;80 → 粒子"/>
+                                <LineBreak/><Run Text="• 距中心 &lt;130 → 刮傷"/>
+                                <LineBreak/><Run Text="• 距中心 ≥130 → 橋接"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <Separator Background="#3C3C3C" Margin="0,8"/>
+                    <TextBlock TextWrapping="Wrap" Foreground="#666666" FontSize="11" LineHeight="18">
+                        <Run Text="1. 選擇分類策略"/>
+                        <LineBreak/><Run Text="2. 點擊「執行分類」產生建議"/>
+                        <LineBreak/><Run Text="3. 確認結果後點擊「套用結果至資料庫」"/>
+                        <LineBreak/><Run Text="4. 回到「缺陷瀏覽」查看更新結果"/>
+                    </TextBlock>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,61 @@
+<UserControl x:Class="WaferMapViewer.Views.WaferMapPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:WaferMapViewer.Controls">
+    <Grid Background="#12121E">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8,6" Background="#1A1A2E">
+            <TextBlock Text="Color Map:" Foreground="#888" VerticalAlignment="Center" Margin="4,0,6,0" FontSize="12"/>
+            <ComboBox ItemsSource="{Binding ColorMapNames}"
+                      SelectedItem="{Binding SelectedColorMap}"
+                      Width="120" Background="#2A2A3E" Foreground="#EEE"
+                      BorderBrush="#555" Margin="0,0,16,0"/>
+
+            <TextBlock Text="Highlight:" Foreground="#888" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="12"/>
+            <ComboBox ItemsSource="{Binding FilterItems}"
+                      SelectedItem="{Binding SelectedFilter}"
+                      DisplayMemberPath="Label"
+                      Width="100" Background="#2A2A3E" Foreground="#EEE"
+                      BorderBrush="#555"/>
+        </StackPanel>
+
+        <controls:WaferMapControl
+            Grid.Row="1"
+            x:Name="WaferControl"
+            WaferMap="{Binding WaferMap}"
+            ColorMapName="{Binding SelectedColorMap}"
+            HighlightResult="{Binding HighlightResult}"
+            SelectedDie="{Binding SelectedDie}"
+            Margin="4"/>
+
+        <WrapPanel Grid.Row="2" Orientation="Horizontal" Margin="8,4" Background="#1A1A2E">
+            <WrapPanel.Resources>
+                <Style TargetType="Border" x:Key="LegendBox">
+                    <Setter Property="Width" Value="14"/>
+                    <Setter Property="Height" Value="14"/>
+                    <Setter Property="Margin" Value="0,0,4,0"/>
+                    <Setter Property="CornerRadius" Value="2"/>
+                </Style>
+            </WrapPanel.Resources>
+            <Border Style="{StaticResource LegendBox}" Background="#2DC653"/>
+            <TextBlock Text="Pass" Foreground="#AAA" FontSize="11" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Border Style="{StaticResource LegendBox}" Background="#E63946"/>
+            <TextBlock Text="Fail" Foreground="#AAA" FontSize="11" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Border Style="{StaticResource LegendBox}" Background="#FFA500"/>
+            <TextBlock Text="Scratch" Foreground="#AAA" FontSize="11" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Border Style="{StaticResource LegendBox}" Background="#FFD700"/>
+            <TextBlock Text="Particle" Foreground="#AAA" FontSize="11" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Border Style="{StaticResource LegendBox}" Background="#8B00FF"/>
+            <TextBlock Text="Void" Foreground="#AAA" FontSize="11" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Border Style="{StaticResource LegendBox}" Background="#FF4500"/>
+            <TextBlock Text="Crack" Foreground="#AAA" FontSize="11" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <Border Style="{StaticResource LegendBox}" Background="#808080"/>
+            <TextBlock Text="Edge" Foreground="#AAA" FontSize="11" VerticalAlignment="Center"/>
+        </WrapPanel>
+    </Grid>
+</UserControl>

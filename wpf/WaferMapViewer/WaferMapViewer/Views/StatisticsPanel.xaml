@@ -1,0 +1,86 @@
+<UserControl x:Class="WaferMapViewer.Views.StatisticsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:WaferMapViewer.Converters">
+    <UserControl.Resources>
+        <converters:YieldToColorConverter x:Key="YieldToColor"/>
+        <Style TargetType="TextBlock" x:Key="LabelStyle">
+            <Setter Property="Foreground" Value="#888"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="ValueStyle">
+            <Setter Property="Foreground" Value="#EEE"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#1A1A2E">
+        <StackPanel Margin="12">
+            <TextBlock Text="Statistics" FontSize="14" FontWeight="Bold"
+                       Foreground="#9090C0" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Wafer ID" Style="{StaticResource LabelStyle}"/>
+            <TextBlock Text="{Binding WaferId}" Style="{StaticResource ValueStyle}"/>
+
+            <TextBlock Text="Lot ID" Style="{StaticResource LabelStyle}"/>
+            <TextBlock Text="{Binding LotId}" Style="{StaticResource ValueStyle}"/>
+
+            <TextBlock Text="Inspection Time" Style="{StaticResource LabelStyle}"/>
+            <TextBlock Text="{Binding InspectionTime}" Style="{StaticResource ValueStyle}" FontSize="11"/>
+
+            <Separator Background="#333" Margin="0,10"/>
+
+            <TextBlock Text="Yield" Style="{StaticResource LabelStyle}"/>
+            <TextBlock Text="{Binding Yield, StringFormat={}{0:F1}%}"
+                       FontSize="28" FontWeight="Bold"
+                       Foreground="{Binding Yield, Converter={StaticResource YieldToColor}}"/>
+
+            <Grid Margin="0,6,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Total" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="{Binding TotalDies}" Style="{StaticResource ValueStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Pass" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="{Binding PassCount}" Style="{StaticResource ValueStyle}" Foreground="#2DC653"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Fail" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="{Binding FailCount}" Style="{StaticResource ValueStyle}" Foreground="#E63946"/>
+                </StackPanel>
+            </Grid>
+
+            <Separator Background="#333" Margin="0,10"/>
+
+            <TextBlock Text="Defect Breakdown" Style="{StaticResource LabelStyle}" Margin="0,0,0,6"/>
+            <ItemsControl ItemsSource="{Binding DefectStats}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding DefectType}"
+                                       Foreground="#CCC" FontSize="11"/>
+                            <ProgressBar Grid.Column="1" Value="{Binding Percentage}"
+                                         Maximum="100" Height="8" Margin="4,0"
+                                         Background="#333" Foreground="#E63946"/>
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding Count}"
+                                       Foreground="#AAA" FontSize="11" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,34 @@
+<Window x:Class="SocketCommSimulator.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:SocketCommSimulator.ViewModels"
+        xmlns:local="clr-namespace:SocketCommSimulator.Views"
+        Title="Socket 通訊模擬器"
+        Width="1200" Height="750"
+        MinWidth="900" MinHeight="600">
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#2D2D30" Padding="12,8">
+            <TextBlock Text="Socket 通訊模擬器 — TCP Server / Client"
+                       Foreground="White" FontSize="16" FontWeight="Bold"/>
+        </Border>
+
+        <TabControl Grid.Row="1">
+            <TabItem Header="TCP Server">
+                <local:ServerPanel DataContext="{Binding Server}"/>
+            </TabItem>
+            <TabItem Header="TCP Client">
+                <local:ClientPanel DataContext="{Binding Client}"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

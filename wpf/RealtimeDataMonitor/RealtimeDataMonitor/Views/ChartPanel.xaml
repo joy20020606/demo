@@ -1,0 +1,9 @@
+<UserControl x:Class="RealtimeDataMonitor.Views.ChartPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:oxy="http://oxyplot.org/wpf">
+    <Grid Background="#12121A">
+        <oxy:PlotView Model="{Binding Chart.PlotModel}"
+                      Background="#12121A"/>
+    </Grid>
+</UserControl>

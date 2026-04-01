@@ -1,0 +1,101 @@
+<UserControl x:Class="InstrumentDashboard.Views.ParameterPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="LabelStyle">
+            <Setter Property="Foreground" Value="#AAAAAA"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#2D2D2D"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3D5A80"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="12" Background="#1E1E2E">
+            <TextBlock Text="Instrument Parameters" FontSize="14" FontWeight="Bold"
+                       Foreground="White" Margin="0,0,0,12"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="32"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Voltage (V)" Style="{StaticResource LabelStyle}"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Voltage, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Current (A)" Style="{StaticResource LabelStyle}"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Current, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Scan Speed (mm/s)" Style="{StaticResource LabelStyle}"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ScanSpeed, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Sampling Rate (Hz)" Style="{StaticResource LabelStyle}"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SamplingRate, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Target Temp (°C)" Style="{StaticResource LabelStyle}"/>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding TargetTemperature, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Pressure (kPa)" Style="{StaticResource LabelStyle}"/>
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding TargetPressure, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Vacuum Level (Pa)" Style="{StaticResource LabelStyle}"/>
+                <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding VacuumLevel, StringFormat=E2, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+
+                <TextBlock Grid.Row="7" Grid.Column="0" Text="Scan Count" Style="{StaticResource LabelStyle}"/>
+                <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding ScanCount, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+            </Grid>
+
+            <Separator Background="#444444" Margin="0,12"/>
+
+            <TextBlock Text="Recipe Management" FontSize="13" FontWeight="SemiBold"
+                       Foreground="White" Margin="0,0,0,8"/>
+
+            <TextBlock Text="Recipe Name" Style="{StaticResource LabelStyle}" Margin="0,0,0,4"/>
+            <TextBox Text="{Binding RecipeName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,8"/>
+
+            <ListBox ItemsSource="{Binding Recipes}" SelectedItem="{Binding SelectedRecipe}"
+                     DisplayMemberPath="Name"
+                     Background="#2D2D2D" Foreground="White" BorderBrush="#555555"
+                     MaxHeight="120" Margin="0,0,0,8"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Save Recipe" Command="{Binding SaveRecipeCommand}" Margin="0,0,8,0"/>
+                <Button Content="Load Recipe" Command="{Binding LoadRecipeCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,39 @@
+<UserControl x:Class="SocketCommSimulator.Views.LogPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SocketCommSimulator.ViewModels"
+             xmlns:models="clr-namespace:SocketCommSimulator.Models">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
+            <TextBlock Text="訊息日誌" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <Button Content="清除" Command="{Binding ClearCommand}"/>
+            <Button Content="切換格式 (ASCII/HEX)" Command="{Binding ToggleFormatCommand}"/>
+            <TextBlock Text="{Binding DisplayFormat}" VerticalAlignment="Center" Margin="8,0,0,0" Foreground="Gray"/>
+        </StackPanel>
+
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding LogLines}"
+                 FontFamily="Consolas"
+                 FontSize="11"
+                 Background="#1E1E1E"
+                 Foreground="#D4D4D4"
+                 BorderThickness="1"
+                 BorderBrush="#555"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 x:Name="LogListBox">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="2,1"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </Grid>
+</UserControl>

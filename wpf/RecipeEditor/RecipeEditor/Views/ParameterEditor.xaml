@@ -1,0 +1,119 @@
+<UserControl x:Class="RecipeEditor.Views.ParameterEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:RecipeEditor.ViewModels"
+             xmlns:converters="clr-namespace:RecipeEditor.Converters">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="InvBoolToVis"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#1976D2" Padding="12,8">
+            <TextBlock Text="Step Properties" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
+        </Border>
+
+        <Border Grid.Row="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="12,8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" VerticalAlignment="Center"
+                           Foreground="#616161" FontSize="12" Margin="0,4"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="4,4"
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                         BorderBrush="#BDBDBD" Padding="4,3"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Type" VerticalAlignment="Center"
+                           Foreground="#616161" FontSize="12" Margin="0,4"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="4,4"
+                          ItemsSource="{x:Static vm:StepTypeValues.All}"
+                          SelectedItem="{Binding StepType}"
+                          BorderBrush="#BDBDBD"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Duration" VerticalAlignment="Center"
+                           Foreground="#616161" FontSize="12" Margin="0,4"/>
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="4,4">
+                    <TextBox Width="80"
+                             Text="{Binding DurationSeconds, UpdateSourceTrigger=PropertyChanged, StringFormat=F0}"
+                             BorderBrush="#BDBDBD" Padding="4,3"/>
+                    <TextBlock Text=" s" VerticalAlignment="Center" Foreground="#757575" Margin="4,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="#F5F5F5" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="12,6">
+                <TextBlock Text="Parameters" FontSize="12" FontWeight="SemiBold" Foreground="#424242"/>
+            </Border>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Parameters}" Margin="8">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:ParameterViewModel}">
+                            <Border Margin="0,3" Padding="10,8"
+                                    Background="White"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="BorderBrush" Value="#E0E0E0"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsValid}" Value="False">
+                                                <Setter Property="BorderBrush" Value="#EF5350"/>
+                                                <Setter Property="Background" Value="#FFF5F5"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="60"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                               Text="{Binding Name}" FontWeight="SemiBold"
+                                               FontSize="12" Foreground="#212121"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1"
+                                             Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, StringFormat=F2}"
+                                             BorderBrush="#BDBDBD" Padding="4,2" TextAlignment="Right"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2"
+                                               Text="{Binding Unit}" VerticalAlignment="Center"
+                                               Margin="6,0,0,0" Foreground="#757575" FontSize="12"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                               Text="{Binding RangeText}"
+                                               FontSize="10" Foreground="#9E9E9E" Margin="0,3,0,0"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>
