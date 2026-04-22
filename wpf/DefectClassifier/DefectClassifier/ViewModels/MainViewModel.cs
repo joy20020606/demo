@@ -1,7 +1,4 @@
-using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DefectClassifier.Services;
-using DefectClassifier.Services.ClassificationStrategy;
 
 namespace DefectClassifier.ViewModels;
 
@@ -17,26 +14,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private string _statusText = "就緒";
 
-    public MainViewModel()
+    public MainViewModel(BrowserViewModel browserVM, StatisticsViewModel statisticsVM, ClassificationViewModel classificationVM)
     {
-        var dbPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "DefectClassifier", "defects.db");
-        Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
-
-        var repository = new DefectRepository(dbPath);
-        repository.SeedSampleData();
-
-        var statisticsService = new StatisticsService();
-        var strategies = new List<IClassificationStrategy>
-        {
-            new SizeBasedStrategy(),
-            new LocationBasedStrategy()
-        };
-
-        BrowserVM = new BrowserViewModel(repository, strategies);
-        StatisticsVM = new StatisticsViewModel(repository, statisticsService);
-        ClassificationVM = new ClassificationViewModel(repository, strategies, BrowserVM);
+        BrowserVM = browserVM;
+        StatisticsVM = statisticsVM;
+        ClassificationVM = classificationVM;
 
         BrowserVM.StatusChanged += msg => StatusText = msg;
         StatisticsVM.StatusChanged += msg => StatusText = msg;
