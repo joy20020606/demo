@@ -40,12 +40,16 @@ export default function CampaignsPage() {
     router.push("/");
   }
 
+  
   if (loading) return <div className="p-8">載入中...</div>;
 
   return (
     <main className="p-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">廣告活動</h1>
+        <Link href="/recommendations" className="text-sm text-gray-500 hover:text-black">
+      建議審核
+    </Link>
         <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-black">
           登出
         </button>

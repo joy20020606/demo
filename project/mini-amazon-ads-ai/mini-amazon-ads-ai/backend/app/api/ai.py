@@ -72,3 +72,32 @@ async def list_recommendations(
         }
         for r in recs
     ]
+
+class UpdateStatusRequest(BaseModel):
+    status: str  # "accepted" or "rejected"
+
+
+@router.patch("/recommendations/{rec_id}")
+async def update_recommendation_status(
+    rec_id: uuid.UUID,
+    req: UpdateStatusRequest,
+    current=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """更新建議的審核狀態(accept / reject)"""
+    if req.status not in ["accepted", "rejected"]:
+        raise HTTPException(400, "status 必須是 'accepted' 或 'rejected'")
+
+    result = await db.execute(
+        select(Recommendation).where(
+            Recommendation.id == rec_id,
+            Recommendation.tenant_id == uuid.UUID(current["tenant_id"]),
+        )
+    )
+    rec = result.scalar_one_or_none()
+    if not rec:
+        raise HTTPException(404, "Recommendation not found")
+
+    rec.status = req.status
+    await db.commit()
+    return {"id": str(rec.id), "status": rec.status}
