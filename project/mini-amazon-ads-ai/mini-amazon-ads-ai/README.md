@@ -1,3 +1,11 @@
+## 🌐 Live Demo
+
+**🔗 [https://demo-eta-five-57.vercel.app](https://demo-eta-five-57.vercel.app)**
+
+預設帳號:`joy@test.com` / `password123`
+
+> 進去後點任一 campaign → 按「啟動 AI Agent 分析」,看 Claude Agent 真實分析 ACOS 異常。
+
 # Mini Amazon Ads AI Dashboard
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
