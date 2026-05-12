@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,10 +10,14 @@ app = FastAPI(
     description="多租戶 SaaS · FastAPI + ClickHouse + Claude Agent",
 )
 
+# CORS:從環境變數讀取 allow origins(支援多個,逗號分隔)
+cors_origins_env = os.getenv("CORS_ORIGINS", "http://localhost:3000")
+cors_origins = [o.strip() for o in cors_origins_env.split(",")]
+
 # CORS:讓 Next.js 前端可以呼叫
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=cors_origins ,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
