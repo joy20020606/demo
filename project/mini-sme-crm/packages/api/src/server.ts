@@ -7,6 +7,13 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import sensible from '@fastify/sensible';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui';
+import {
+  jsonSchemaTransform,
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod';
 import prismaPlugin from './plugins/prisma.js';
 import { setupErrorHandler } from './plugins/validation.js';
 import { registerHealthRoutes } from './routes/health.js';
@@ -26,11 +33,42 @@ async function buildServer() {
     },
   });
 
+  // ---- Zod 當作 Fastify 的 validator / serializer ----
+  // 設定以後，每條 route 上面 schema: { body: ZodSchema, ... } 會自動驗證 + 推導型別
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+
   // ---- 基礎 plugin ----
   await app.register(cors, {
     origin: process.env.NEXT_PUBLIC_API_URL ? true : '*',
   });
   await app.register(sensible);
+
+  // ---- Swagger / OpenAPI ----
+  // 把 Zod schema 轉成 OpenAPI spec，再丟給 Swagger UI 渲染
+  await app.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: 'Mini SME CRM API',
+        description: 'AI-powered CRM for Taiwanese SMEs',
+        version: '0.1.0',
+      },
+      servers: [{ url: `http://localhost:${PORT}` }],
+      tags: [
+        { name: 'health', description: '健康檢查' },
+        { name: 'customers', description: '客戶 CRUD' },
+      ],
+    },
+    transform: jsonSchemaTransform,
+  });
+
+  await app.register(fastifySwaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: true,
+    },
+  });
 
   // ---- 基礎設施 plugin（DB） ----
   await app.register(prismaPlugin);
@@ -50,6 +88,7 @@ async function start() {
   try {
     await app.listen({ port: PORT, host: HOST });
     app.log.info(`🚀 api listening on http://${HOST}:${PORT}`);
+    app.log.info(`📚 swagger ui at http://localhost:${PORT}/docs`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);
