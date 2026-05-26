@@ -1,0 +1,28 @@
+{
+  "name": "mini-maas-ops",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mini MaaS Ops AI Platform - Agentic AI SaaS for Mobility-as-a-Service operations",
+  "scripts": {
+    "dev": "pnpm --filter api-gateway dev",
+    "ingest": "pnpm --filter ingestion dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "pnpm --filter api-gateway prisma migrate dev",
+    "db:seed": "pnpm --filter api-gateway prisma db seed",
+    "db:studio": "pnpm --filter api-gateway prisma studio"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.10",
+    "tsx": "^4.16.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.6.0"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@maas/ingestion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "test": "echo 'no tests yet'",
+    "lint": "echo 'no lint configured yet'"
+  },
+  "dependencies": {
+    "@maas/shared": "workspace:*",
+    "dotenv": "^16.4.5",
+    "mongoose": "^8.5.1",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/pg": "^8.11.6",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4"
+  }
+}

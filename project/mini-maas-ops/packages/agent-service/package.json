@@ -1,0 +1,11 @@
+{
+  "name": "@maas/agent-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo 'not implemented yet (Day 3)'",
+    "test": "echo 'not implemented yet (Day 3)'",
+    "lint": "echo 'not implemented yet (Day 3)'"
+  }
+}
