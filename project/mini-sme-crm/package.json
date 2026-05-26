@@ -1,0 +1,31 @@
+{
+  "name": "mini-sme-crm",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-powered CRM for SMEs — unify customer touchpoints across Excel, LINE, Email into actionable insights",
+  "scripts": {
+    "dev": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "pnpm --filter db prisma migrate dev",
+    "db:seed": "pnpm --filter db prisma db seed",
+    "db:studio": "pnpm --filter db prisma studio",
+    "db:generate": "pnpm --filter db prisma generate"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.10",
+    "tsx": "^4.16.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.6.0"
+}
