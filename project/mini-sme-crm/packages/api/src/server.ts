@@ -1,13 +1,16 @@
 /**
  * Fastify API server
  *
- * 啟動：pnpm dev（從 root 跑，會 tsx watch 自動重啟）
+ * 啟動：pnpm dev:api（從 root 跑，會 tsx watch 自動重啟）
  * 部署：Railway，build 後跑 node dist/server.js
  */
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import sensible from '@fastify/sensible';
+import prismaPlugin from './plugins/prisma.js';
+import { setupErrorHandler } from './plugins/validation.js';
 import { registerHealthRoutes } from './routes/health.js';
+import { registerCustomerRoutes } from './routes/customers.js';
 
 const PORT = Number(process.env.API_PORT ?? 3001);
 const HOST = process.env.API_HOST ?? '0.0.0.0';
@@ -23,13 +26,21 @@ async function buildServer() {
     },
   });
 
+  // ---- 基礎 plugin ----
   await app.register(cors, {
     origin: process.env.NEXT_PUBLIC_API_URL ? true : '*',
   });
   await app.register(sensible);
 
-  // 路由
+  // ---- 基礎設施 plugin（DB） ----
+  await app.register(prismaPlugin);
+
+  // ---- 全域 error handler ----
+  await setupErrorHandler(app);
+
+  // ---- 路由 ----
   await registerHealthRoutes(app);
+  await registerCustomerRoutes(app);
 
   return app;
 }
