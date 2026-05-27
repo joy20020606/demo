@@ -7,9 +7,11 @@ import { z } from 'zod';
 export const CustomerSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(1).max(100),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  company: z.string().optional(),
+  // 用 nullish 因為 Prisma 對 optional 欄位回 null（不是 undefined），
+  // 但前端建立時可以省略（undefined）。.nullish() 兩種都接。
+  email: z.string().email().nullish(),
+  phone: z.string().nullish(),
+  company: z.string().nullish(),
   tags: z.array(z.string()).default([]),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

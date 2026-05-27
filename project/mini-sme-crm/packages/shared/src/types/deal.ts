@@ -19,9 +19,10 @@ export const DealSchema = z.object({
   title: z.string().min(1).max(200),
   amount: z.number().nonnegative(),
   stage: DealStageSchema,
-  aiScore: z.number().min(0).max(100).optional(),
-  aiScoreReason: z.string().optional(),
-  expectedCloseAt: z.coerce.date().optional(),
+  // .nullish()：DB optional 欄位 Prisma 回 null，前端建立時可省略（undefined）
+  aiScore: z.number().min(0).max(100).nullish(),
+  aiScoreReason: z.string().nullish(),
+  expectedCloseAt: z.coerce.date().nullish(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
