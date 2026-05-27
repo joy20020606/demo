@@ -22,4 +22,15 @@ if (process.env.NODE_ENV !== 'production') {
   global.__prisma = prisma;
 }
 
-export type { PrismaClient } from '@prisma/client';
+// Runtime export — Prisma namespace 含 Decimal class、WhereInput types
+export { Prisma } from '@prisma/client';
+
+// 型別 re-export — 讓其他 package 可以 import Prisma model types
+export type {
+  PrismaClient,
+  Customer,
+  Deal,
+  ContactLog,
+  DealStage,
+  ContactChannel,
+} from '@prisma/client';

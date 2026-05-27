@@ -18,6 +18,7 @@ import prismaPlugin from './plugins/prisma.js';
 import { setupErrorHandler } from './plugins/validation.js';
 import { registerHealthRoutes } from './routes/health.js';
 import { registerCustomerRoutes } from './routes/customers.js';
+import { registerDealRoutes } from './routes/deals.js';
 
 const PORT = Number(process.env.API_PORT ?? 3001);
 const HOST = process.env.API_HOST ?? '0.0.0.0';
@@ -57,6 +58,7 @@ async function buildServer() {
       tags: [
         { name: 'health', description: '健康檢查' },
         { name: 'customers', description: '客戶 CRUD' },
+        { name: 'deals', description: '商機 CRUD + Kanban 狀態機' },
       ],
     },
     transform: jsonSchemaTransform,
@@ -79,6 +81,7 @@ async function buildServer() {
   // ---- 路由 ----
   await registerHealthRoutes(app);
   await registerCustomerRoutes(app);
+  await registerDealRoutes(app);
 
   return app;
 }
