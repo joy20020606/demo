@@ -28,13 +28,13 @@
 ## 🎬 Demo
 
 ### 廣告活動列表(多租戶 + ClickHouse 即時聚合)
-![Campaigns List](./docs/01-campaigns.png)
+![Campaigns List](./docs/01-campaigns.PNG)
 
 ### 詳細頁(時序圖表展示 ACOS 異常)
-![Campaign Detail](./docs/02-detail.png)
+![Campaign Detail](./docs/02-detail.PNG)
 
 ### Claude Agent 自動分析(真實串接,非 mock)
-![AI Analysis](./docs/03-ai-analysis.png)
+![AI Analysis](./docs/03-ai-analysis.PNG)
 
 ---
 
