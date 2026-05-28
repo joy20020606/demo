@@ -20,7 +20,8 @@ import { registerHealthRoutes } from './routes/health.js';
 import { registerCustomerRoutes } from './routes/customers.js';
 import { registerDealRoutes } from './routes/deals.js';
 
-const PORT = Number(process.env.API_PORT ?? 3001);
+// Railway / Vercel 用 PORT，本地用 API_PORT
+const PORT = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);
 const HOST = process.env.API_HOST ?? '0.0.0.0';
 
 async function buildServer() {
@@ -40,8 +41,17 @@ async function buildServer() {
   app.setSerializerCompiler(serializerCompiler);
 
   // ---- 基礎 plugin ----
+  // CORS：production 限定 FRONTEND_URL（Vercel 域名），dev 全開
+  // 也允許 Vercel preview deploy（*.vercel.app）方便看 PR 預覽
   await app.register(cors, {
-    origin: process.env.NEXT_PUBLIC_API_URL ? true : '*',
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? [
+            process.env.FRONTEND_URL ?? '',
+            /\.vercel\.app$/,
+          ].filter(Boolean)
+        : true, // dev：全開
+    credentials: true,
   });
   await app.register(sensible);
 
@@ -54,7 +64,12 @@ async function buildServer() {
         description: 'AI-powered CRM for Taiwanese SMEs',
         version: '0.1.0',
       },
-      servers: [{ url: `http://localhost:${PORT}` }],
+      servers: [
+        {
+          url:
+            process.env.API_PUBLIC_URL ?? `http://localhost:${PORT}`,
+        },
+      ],
       tags: [
         { name: 'health', description: '健康檢查' },
         { name: 'customers', description: '客戶 CRUD' },
