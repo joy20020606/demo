@@ -72,8 +72,8 @@
 
 | 能力 | 技術 | 狀態 |
 |------|------|------|
-| 客戶摘要 | Claude API + structured JSON output | 🔜 Phase 5 |
-| 商機 AI 評分 | Claude API + 多維度評分 prompt | 🔜 Phase 5 |
+| 客戶摘要 | Claude API + structured JSON output（自動歸納「現況 + 下一步建議」） | ✅ Phase 5 |
+| 商機 AI 評分 | Claude API + 多維度評分 prompt（0-100 分 + 理由，分數寫進 DB cache） | ✅ Phase 5 |
 | **RAG 語意搜尋** | pgvector + Voyage AI embedding | 🔜 Phase 6 |
 | **Agent** | Claude Tool Use + multi-turn loop | 🔜 Phase 7 |
 
@@ -176,7 +176,7 @@ mini-sme-crm/
 | 2 | Deal Kanban + 狀態機 + 409 Conflict 保護 | ✅ |
 | 3 | Next.js 前端 + TanStack Query + dnd-kit 拖拉 | ✅ |
 | **4** | **Railway + Vercel 部署上線** | ✅ |
-| 5 | ContactLog + Claude 摘要 + 商機 AI 評分 | 🔜 |
+| **5** | **ContactLog CRUD + Claude API 摘要 + 商機 AI 評分** | ✅ |
 | **6** | **RAG**：pgvector + Voyage embedding 相似度檢索 | 🔜 |
 | **7** | **Agent**：Claude Tool Use + 多輪對話 | 🔜 |
 | 8 | LINE Bot 整合（bonus） | 🔜 |

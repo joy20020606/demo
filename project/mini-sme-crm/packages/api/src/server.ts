@@ -19,6 +19,8 @@ import { setupErrorHandler } from './plugins/validation.js';
 import { registerHealthRoutes } from './routes/health.js';
 import { registerCustomerRoutes } from './routes/customers.js';
 import { registerDealRoutes } from './routes/deals.js';
+import { registerContactLogRoutes } from './routes/contact-logs.js';
+import { registerAiRoutes } from './routes/ai.js';
 
 // Railway / Vercel 用 PORT，本地用 API_PORT
 const PORT = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);
@@ -74,6 +76,8 @@ async function buildServer() {
         { name: 'health', description: '健康檢查' },
         { name: 'customers', description: '客戶 CRUD' },
         { name: 'deals', description: '商機 CRUD + Kanban 狀態機' },
+        { name: 'contact-logs', description: '客戶聯絡紀錄' },
+        { name: 'ai', description: 'Claude API 摘要 + 評分' },
       ],
     },
     transform: jsonSchemaTransform,
@@ -97,6 +101,8 @@ async function buildServer() {
   await registerHealthRoutes(app);
   await registerCustomerRoutes(app);
   await registerDealRoutes(app);
+  await registerContactLogRoutes(app);
+  await registerAiRoutes(app);
 
   return app;
 }

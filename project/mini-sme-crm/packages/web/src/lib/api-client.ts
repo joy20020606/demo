@@ -12,6 +12,8 @@ import type {
   Deal,
   CreateDealInput,
   DealStage,
+  ContactLog,
+  CreateContactLogInput,
 } from '@sme-crm/shared';
 
 const BASE_URL =
@@ -48,13 +50,17 @@ async function request<T>(
 ): Promise<T> {
   const { json, headers, ...rest } = init;
 
+  // 只有真的有 JSON body 才送 Content-Type，否則 Fastify 會抱怨
+  // "Body cannot be empty when content-type is set to application/json"
+  const hasJsonBody = json !== undefined;
+
   const res = await fetch(`${BASE_URL}${path}`, {
     ...rest,
     headers: {
-      'Content-Type': 'application/json',
+      ...(hasJsonBody ? { 'Content-Type': 'application/json' } : {}),
       ...headers,
     },
-    body: json !== undefined ? JSON.stringify(json) : init.body,
+    body: hasJsonBody ? JSON.stringify(json) : init.body,
   });
 
   // 204 No Content（DELETE）
@@ -140,4 +146,48 @@ export const dealsApi = {
 
   delete: (id: string) =>
     request<void>(`/api/deals/${id}`, { method: 'DELETE' }),
+};
+
+// ============================================================
+// Contact Logs
+// ============================================================
+export const contactLogsApi = {
+  listByCustomer: (customerId: string) =>
+    request<ContactLog[]>(`/api/customers/${customerId}/contact-logs`),
+
+  create: (input: CreateContactLogInput) =>
+    request<ContactLog>('/api/contact-logs', {
+      method: 'POST',
+      json: input,
+    }),
+
+  delete: (id: string) =>
+    request<void>(`/api/contact-logs/${id}`, { method: 'DELETE' }),
+};
+
+// ============================================================
+// AI (Claude)
+// ============================================================
+export interface CustomerSummary {
+  currentStatus: string;
+  nextActions: string[];
+  raw: string;
+  contactCount: number;
+}
+
+export interface DealScore {
+  dealId: string;
+  score: number;
+  reason: string;
+  scoredAt: string;
+}
+
+export const aiApi = {
+  summarizeCustomer: (customerId: string) =>
+    request<CustomerSummary>(`/api/customers/${customerId}/ai-summary`, {
+      method: 'POST',
+    }),
+
+  scoreDeal: (dealId: string) =>
+    request<DealScore>(`/api/deals/${dealId}/ai-score`, { method: 'POST' }),
 };

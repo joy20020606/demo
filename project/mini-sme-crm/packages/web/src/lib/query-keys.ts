@@ -22,4 +22,9 @@ export const qk = {
       [...qk.deals.all, 'list', params] as const,
     detail: (id: string) => [...qk.deals.all, 'detail', id] as const,
   },
+  contactLogs: {
+    all: ['contact-logs'] as const,
+    byCustomer: (customerId: string) =>
+      [...qk.contactLogs.all, 'by-customer', customerId] as const,
+  },
 };

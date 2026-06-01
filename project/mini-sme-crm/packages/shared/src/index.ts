@@ -7,4 +7,5 @@
 
 export * from './types/customer.js';
 export * from './types/deal.js';
+export * from './types/contact-log.js';
 export * from './errors.js';
