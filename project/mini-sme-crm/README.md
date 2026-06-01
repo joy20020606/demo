@@ -38,7 +38,9 @@
 
 ![Swagger UI](./docs/screenshots/03-swagger.png)
 
-### 建議試用流程（90 秒看完核心功能）
+### 建議試用流程（2 分鐘看完核心功能）
+
+**Part 1：全棧 CRUD + Kanban**
 
 1. **進首頁** → 看 3 個系統狀態卡
 2. **點「客戶」** → 新增一個客戶（名字、Email、公司）
@@ -46,7 +48,18 @@
 4. **拖卡片** 從「名單」拖到「報價」→ 觀察 UI 瞬間反應（optimistic update）
 5. **拖到「成交 🎉」** → 卡片變灰、出現 🔒 已結案
 6. **試著再拖 WON 卡片** → 拖不動（前端 disabled）
-7. （想看後端機制）打開 Swagger UI → `PATCH /api/deals/{id}/stage` 改 stage 成 `LEAD` → **回應 409 Conflict**
+
+**Part 2：AI 整合（Claude API）**
+
+7. **回客戶頁 → 點客戶名字** → 進詳細頁
+8. **新增 2-3 筆聯絡紀錄**（例：「客戶詢問 Q4 報價」、「6/3 已寄報價單」）
+9. **按右上紫色「產生摘要」** → Claude 5-10 秒後吐「客戶現況 + 下一步建議」
+10. **回 Kanban → 任一卡按「🤖 評分」** → 0-100 分數 badge + 理由，分數 cache 進 DB
+
+**Part 3：技術機制（給技術主管看）**
+
+11. 打開 Swagger UI → `PATCH /api/deals/{id}/stage` 改 stage 成 `LEAD` → **回應 409 Conflict**（狀態機保護）
+12. Swagger 還可以看到 `ai` / `contact-logs` / `customers` / `deals` 全部 endpoint，schema 自動從 Zod 生成
 
 ---
 
@@ -61,10 +74,10 @@
 
 這個 demo 解決：
 
-1. **統一的客戶 + 商機資料模型** —— 取代 Excel + LINE 截圖
+1. **統一的客戶 + 商機 + 聯絡紀錄資料模型** —— 取代 Excel + LINE 截圖
 2. **Kanban Pipeline View** —— 業界標準的銷售階段視覺化
 3. **狀態機保護** —— 終態 (WON/LOST) 鎖死，避免資料污染
-4. **AI 強化（Phase 5+）** —— 摘要、評分、RAG、Agent
+4. **AI 強化** —— Claude 自動摘要客戶現況（已實作）+ 商機評分 0-100（已實作）+ RAG/Agent（開發中）
 
 ---
 
@@ -96,7 +109,7 @@
 ```
 @sme-crm/shared   ← Zod schemas + 自定義 Error 類別
 @sme-crm/db       ← Prisma client + namespace re-export
-@sme-crm/ai       ← Claude API wrapper（Phase 5+）
+@sme-crm/ai       ← Claude API wrapper（summarizeContacts、scoreDeal）
 @sme-crm/api      ← Fastify server
 @sme-crm/web      ← Next.js app
 ```
