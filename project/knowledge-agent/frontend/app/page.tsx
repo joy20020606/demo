@@ -53,7 +53,7 @@ export default function Home() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold">技能對應</h2>
+        <h2 className="mb-3 text-lg font-semibold">技術重點</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {skills.map(([title, desc]) => (
             <div key={title} className="rounded border bg-white p-4">

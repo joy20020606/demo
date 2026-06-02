@@ -4,8 +4,8 @@ For each variant (vector-only, hybrid, hybrid+rerank, hybrid+rerank+HyDE) we run
 the golden set through the live pipeline, then score with RAGAS:
 faithfulness, answer_relevancy, context_precision, context_recall.
 
-The per-variant table is the demo's headline artifact: the interviewer sees
-the metrics climb as retrieval gets smarter, alongside latency.
+The per-variant table makes the retrieval-quality tradeoff explicit: metrics
+climb as retrieval gets smarter, shown alongside latency.
 
 Run:  python -m app.eval.run_ragas
 """
