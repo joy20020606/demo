@@ -1,0 +1,73 @@
+"""load → chunk → (theory-tag) → embed → upsert."""
+
+import json
+
+from sqlalchemy.orm import Session
+
+from app.db.models import Chunk as ChunkRow
+from app.db.models import Document
+from app.ingestion.chunker import chunk as chunk_text
+from app.ingestion.loader import load
+from app.llm import complete, embed_texts
+
+_META_SYSTEM = (
+    "You extract bibliographic metadata from the first page of a document. "
+    'Return strict JSON: {"title": str, "author": str|null, '
+    '"source_type": "paper"|"book"|"research", "theory": str|null}. '
+    "theory = the central theory/concept/framework the work is about, if identifiable."
+)
+
+
+def _extract_metadata(first_page_text: str, fallback_title: str) -> dict:
+    try:
+        raw = complete(_META_SYSTEM, first_page_text[:3000], max_tokens=300, temperature=0.0)
+        raw = raw[raw.find("{") : raw.rfind("}") + 1]
+        data = json.loads(raw)
+    except Exception:  # noqa: BLE001
+        data = {}
+    return {
+        "title": data.get("title") or fallback_title,
+        "author": data.get("author"),
+        "source_type": data.get("source_type") or "paper",
+        "theory": data.get("theory"),
+    }
+
+
+def ingest(session: Session, filename: str, data: bytes, method: str = "fixed") -> tuple[Document, int]:
+    pages = load(filename, data)
+    if not pages:
+        raise ValueError("No extractable text in upload.")
+
+    meta = _extract_metadata(pages[0].text, fallback_title=filename)
+
+    doc = Document(
+        title=meta["title"],
+        author=meta["author"],
+        source_type=meta["source_type"],
+        source_ref=filename,
+    )
+    session.add(doc)
+    session.flush()  # assign doc.id
+
+    chunks = chunk_text(pages, method=method)
+    if not chunks:
+        raise ValueError("Chunking produced no content.")
+
+    embeddings = embed_texts([c.content for c in chunks])
+
+    rows = [
+        ChunkRow(
+            document_id=doc.id,
+            content=c.content,
+            chunk_index=c.index,
+            chunk_method=c.method,
+            theory_tag=meta["theory"],
+            page_no=c.page_no,
+            token_count=c.token_count,
+            embedding=emb,
+        )
+        for c, emb in zip(chunks, embeddings)
+    ]
+    session.add_all(rows)
+    session.commit()
+    return doc, len(rows)
