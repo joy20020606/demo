@@ -22,7 +22,7 @@ Agent 帶**來源 / 作者 / 理論**引用回答，並附 **RAGAS 自動化評�
 Polyglot：**Python（FastAPI）RAG/Agent 後端 + TypeScript（Next.js）前端**。
 部署：**Railway（後端 + Postgres/pgvector）+ Vercel（前端）**。
 
-> **Live Demo**：前端 _（部署後填入 Vercel 網址）_ ｜ API 文件 _（部署後填入 Railway `/docs` 網址）_
+> 🚀 **Live Demo**：[demo-z1s7.vercel.app](https://demo-z1s7.vercel.app) ｜ 📘 **API 文件**：[backend-production-6049.up.railway.app/docs](https://backend-production-6049.up.railway.app/docs)
 
 ---
 
