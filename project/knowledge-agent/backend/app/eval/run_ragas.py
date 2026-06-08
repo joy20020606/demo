@@ -24,9 +24,11 @@ RESULTS_PATH = Path(__file__).parent / "results.json"
 VARIANTS: dict[str, RagConfig] = {
     "vector-only": RagConfig(use_hybrid=False, use_rerank=False),
     "hybrid": RagConfig(use_hybrid=True, use_rerank=False),
-    "hybrid+rerank": RagConfig(use_hybrid=True, use_rerank=True),
-    "hybrid+rerank+hyde": RagConfig(use_hybrid=True, use_rerank=True, use_hyde=True),
+    "hybrid+hyde": RagConfig(use_hybrid=True, use_hyde=True),
+    "hybrid+hyde+multi": RagConfig(use_hybrid=True, use_hyde=True, use_multi_query=True),
 }
+# rerank variant omitted by default (sentence-transformers/torch not installed —
+# this IS the precision↔cost tradeoff: enable it by installing [rerank] extras).
 
 
 def _collect(config: RagConfig) -> tuple[list[dict], float]:
@@ -48,7 +50,10 @@ def _collect(config: RagConfig) -> tuple[list[dict], float]:
 
 
 def _score(samples: list[dict]) -> dict:
+    from langchain_openai import ChatOpenAI, OpenAIEmbeddings
     from ragas import EvaluationDataset, evaluate
+    from ragas.llms import LangchainLLMWrapper
+    from ragas.embeddings import LangchainEmbeddingsWrapper
     from ragas.metrics import (
         answer_relevancy,
         context_precision,
@@ -56,10 +61,17 @@ def _score(samples: list[dict]) -> dict:
         faithfulness,
     )
 
+    # RAGAS uses an LLM as judge + embeddings to score samples.
+    # We pin cheap, fast models so eval doesn't blow up cost or latency.
+    judge = LangchainLLMWrapper(ChatOpenAI(model="gpt-4o-mini", temperature=0))
+    embedder = LangchainEmbeddingsWrapper(OpenAIEmbeddings(model="text-embedding-3-small"))
+
     dataset = EvaluationDataset.from_list(samples)
     result = evaluate(
         dataset=dataset,
         metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
+        llm=judge,
+        embeddings=embedder,
     )
     df = result.to_pandas()
     return {

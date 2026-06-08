@@ -1,8 +1,11 @@
 """load → chunk → (theory-tag) → embed → upsert."""
 
 import json
+import logging
 
 from sqlalchemy.orm import Session
+
+logger = logging.getLogger(__name__)
 
 from app.db.models import Chunk as ChunkRow
 from app.db.models import Document
@@ -23,7 +26,12 @@ def _extract_metadata(first_page_text: str, fallback_title: str) -> dict:
         raw = complete(_META_SYSTEM, first_page_text[:3000], max_tokens=300, temperature=0.0)
         raw = raw[raw.find("{") : raw.rfind("}") + 1]
         data = json.loads(raw)
-    except Exception:  # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001 — degrade gracefully but never silently
+        logger.warning(
+            "metadata extraction failed (%s: %s); falling back to filename/defaults",
+            type(exc).__name__,
+            exc,
+        )
         data = {}
     return {
         "title": data.get("title") or fallback_title,
