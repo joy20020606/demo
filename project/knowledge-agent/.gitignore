@@ -6,7 +6,7 @@ venv/
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
-app/eval/results.json
+# app/eval/results.json kept committed so /eval dashboard works in production
 
 # Node / Next
 node_modules/
