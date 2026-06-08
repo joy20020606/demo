@@ -31,6 +31,7 @@ class Document(Base):
     author: Mapped[str | None] = mapped_column(String(256))  # citation: author
     source_type: Mapped[str | None] = mapped_column(String(32))  # paper | book | research
     source_ref: Mapped[str | None] = mapped_column(String(512))  # citation: DOI / ISBN / URL
+    content_hash: Mapped[str | None] = mapped_column(String(64), unique=True, index=True)  # SHA256 dedup
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     chunks: Mapped[list["Chunk"]] = relationship(

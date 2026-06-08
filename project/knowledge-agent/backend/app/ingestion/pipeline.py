@@ -1,11 +1,20 @@
 """load → chunk → (theory-tag) → embed → upsert."""
 
+import hashlib
 import json
 import logging
 
 from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
+
+
+class DuplicateDocumentError(ValueError):
+    """Raised when an identical document (same SHA256) has already been ingested."""
+
+    def __init__(self, existing_title: str):
+        super().__init__(f"Document already ingested: {existing_title!r}")
+        self.existing_title = existing_title
 
 from app.db.models import Chunk as ChunkRow
 from app.db.models import Document
@@ -43,6 +52,12 @@ def _extract_metadata(first_page_text: str, fallback_title: str) -> dict:
 
 
 def ingest(session: Session, filename: str, data: bytes, method: str = "fixed") -> tuple[Document, int]:
+    # Dedup by content SHA256 — same bytes = same document, regardless of filename.
+    content_hash = hashlib.sha256(data).hexdigest()
+    existing = session.query(Document).filter_by(content_hash=content_hash).first()
+    if existing:
+        raise DuplicateDocumentError(existing.title)
+
     pages = load(filename, data)
     if not pages:
         raise ValueError("No extractable text in upload.")
@@ -54,6 +69,7 @@ def ingest(session: Session, filename: str, data: bytes, method: str = "fixed") 
         author=meta["author"],
         source_type=meta["source_type"],
         source_ref=filename,
+        content_hash=content_hash,
     )
     session.add(doc)
     session.flush()  # assign doc.id

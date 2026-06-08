@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.db.engine import get_session
 from app.db.models import Chunk, Document
-from app.ingestion.pipeline import ingest
+from app.ingestion.pipeline import DuplicateDocumentError, ingest
 from app.schemas import DocumentOut, IngestResponse
 
 router = APIRouter(prefix="/documents", tags=["documents"])
@@ -21,6 +21,9 @@ async def upload_document(
         raise HTTPException(400, "Empty file.")
     try:
         doc, n = ingest(session, file.filename or "upload", data, method=method)
+    except DuplicateDocumentError as e:
+        # 409 Conflict — semantically correct for "this resource already exists"
+        raise HTTPException(409, str(e)) from e
     except ValueError as e:
         raise HTTPException(422, str(e)) from e
     return IngestResponse(
