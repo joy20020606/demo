@@ -33,11 +33,12 @@ def _extract_metadata(first_page_text: str, fallback_title: str) -> dict:
             exc,
         )
         data = {}
+    theory = data.get("theory")
     return {
-        "title": data.get("title") or fallback_title,
-        "author": data.get("author"),
-        "source_type": data.get("source_type") or "paper",
-        "theory": data.get("theory"),
+        "title": (data.get("title") or fallback_title)[:512],
+        "author": (data.get("author") or None) and data["author"][:256],
+        "source_type": (data.get("source_type") or "paper")[:32],
+        "theory": theory[:500] if theory else None,
     }
 
 

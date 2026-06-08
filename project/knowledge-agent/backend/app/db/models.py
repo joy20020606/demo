@@ -48,7 +48,7 @@ class Chunk(Base):
     content: Mapped[str] = mapped_column(Text, nullable=False)
     chunk_index: Mapped[int] = mapped_column(Integer, default=0)
     chunk_method: Mapped[str] = mapped_column(String(24), default="fixed")  # fixed|semantic|propositional
-    theory_tag: Mapped[str | None] = mapped_column(String(128))  # citation: theory
+    theory_tag: Mapped[str | None] = mapped_column(Text)  # citation: theory (LLM-extracted, length varies)
     page_no: Mapped[int | None] = mapped_column(Integer)
     token_count: Mapped[int | None] = mapped_column(Integer)
     embedding: Mapped[list[float] | None] = mapped_column(Vector(EMBEDDING_DIM))

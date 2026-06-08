@@ -26,6 +26,28 @@ Polyglot：**Python（FastAPI）RAG/Agent 後端 + TypeScript（Next.js）前端
 
 ---
 
+## Demo 截圖
+
+### 1. 首頁 — 技術重點一覽
+![Home](docs/screenshots/01-home.png)
+
+### 2. 上傳文件 — 抽出書目 metadata（title / author / theory）
+![Upload](docs/screenshots/02-upload.png)
+
+### 3. 問答 — 答案帶 `[n]` 引用，右側 RetrievalInspector 顯示 Top-3 各階段分數
+![Chat](docs/screenshots/03-chat.png)
+
+### 4. 防幻覺 — 離題問題回傳「現有資料不足以回答」，不捏造引用
+![Guardrail](docs/screenshots/04-guardrail.png)
+
+### 5. RAGAS 評估儀表板 — 4 配方比較（faithfulness / context precision …）
+![Eval](docs/screenshots/05-eval.png)
+
+### 6. Swagger — Pydantic schema 自動產生的 OpenAPI 文件
+![Swagger](docs/screenshots/06-swagger.png)
+
+---
+
 ## 架構
 
 ```
