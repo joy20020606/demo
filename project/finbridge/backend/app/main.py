@@ -4,10 +4,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api import instruments, positions, tenants, transactions
+from app.api import (
+    connectors,
+    dead_letter,
+    instruments,
+    positions,
+    reconciliation,
+    tenants,
+    transactions,
+)
 from app.config import get_settings
 from app.db.engine import engine
 from app.db.init_db import init_db
+from app.logging_config import configure_logging
+
+configure_logging()
 
 _s = get_settings()
 
@@ -34,6 +45,9 @@ app.include_router(tenants.router)
 app.include_router(instruments.router)
 app.include_router(positions.router)
 app.include_router(transactions.router)
+app.include_router(connectors.router)
+app.include_router(dead_letter.router)
+app.include_router(reconciliation.router)
 
 
 @app.get("/health")

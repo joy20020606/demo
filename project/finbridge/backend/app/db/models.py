@@ -6,8 +6,10 @@ from decimal import Decimal
 from sqlalchemy import (
     Enum,
     ForeignKey,
+    Integer,
     Numeric,
     String,
+    Text,
     UniqueConstraint,
     func,
 )
@@ -32,6 +34,30 @@ class TransactionType(enum.StrEnum):
     dividend = "dividend"
     fee = "fee"
     transfer = "transfer"
+
+
+class ConnectorRunStatus(enum.StrEnum):
+    running = "running"
+    success = "success"
+    partial = "partial"
+    failed = "failed"
+
+
+class DeadLetterStatus(enum.StrEnum):
+    pending = "pending"
+    replayed = "replayed"
+    resolved = "resolved"
+
+
+class ReconciliationBreakType(enum.StrEnum):
+    qty_mismatch = "qty_mismatch"
+    missing_position = "missing_position"
+    extra_position = "extra_position"
+
+
+class ReconciliationBreakStatus(enum.StrEnum):
+    open = "open"
+    acknowledged = "acknowledged"
 
 
 class Tenant(Base):
@@ -145,4 +171,89 @@ class Transaction(Base):
             name="uq_transaction_tenant_source_message",
         ),
         UniqueConstraint("content_hash", name="uq_transaction_content_hash"),
+    )
+
+
+class ConnectorRun(Base):
+    __tablename__ = "connector_runs"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
+    )
+    connector: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[ConnectorRunStatus] = mapped_column(
+        Enum(ConnectorRunStatus, name="connector_run_status"), nullable=False
+    )
+    started_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    finished_at: Mapped[datetime | None] = mapped_column()
+    messages_total: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    messages_ok: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    messages_dead: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    error: Mapped[str | None] = mapped_column(Text)
+
+    tenant: Mapped["Tenant"] = relationship()
+
+
+class DeadLetter(Base):
+    __tablename__ = "dead_letters"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
+    )
+    connector: Mapped[str] = mapped_column(String(64), nullable=False)
+    source_message_id: Mapped[str | None] = mapped_column(String(128))
+    raw_payload: Mapped[str] = mapped_column(Text, nullable=False)
+    error_type: Mapped[str] = mapped_column(String(128), nullable=False)
+    error_detail: Mapped[str] = mapped_column(Text, nullable=False)
+    retry_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    status: Mapped[DeadLetterStatus] = mapped_column(
+        Enum(DeadLetterStatus, name="dead_letter_status"),
+        nullable=False,
+        default=DeadLetterStatus.pending,
+    )
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    tenant: Mapped["Tenant"] = relationship()
+
+
+class ReconciliationBreak(Base):
+    __tablename__ = "reconciliation_breaks"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
+    )
+    instrument_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("instruments.id", ondelete="SET NULL")
+    )
+    account_id: Mapped[str] = mapped_column(String(64), nullable=False)
+    symbol: Mapped[str] = mapped_column(String(64), nullable=False)
+    break_type: Mapped[ReconciliationBreakType] = mapped_column(
+        Enum(ReconciliationBreakType, name="reconciliation_break_type"), nullable=False
+    )
+    expected: Mapped[Decimal] = mapped_column(Numeric(28, 8), nullable=False)
+    actual: Mapped[Decimal] = mapped_column(Numeric(28, 8), nullable=False)
+    delta: Mapped[Decimal] = mapped_column(Numeric(28, 8), nullable=False)
+    status: Mapped[ReconciliationBreakStatus] = mapped_column(
+        Enum(ReconciliationBreakStatus, name="reconciliation_break_status"),
+        nullable=False,
+        default=ReconciliationBreakStatus.open,
+    )
+    detected_at: Mapped[datetime] = mapped_column(
+        server_default=func.now(), onupdate=func.now()
+    )
+
+    tenant: Mapped["Tenant"] = relationship()
+    instrument: Mapped["Instrument | None"] = relationship()
+
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id",
+            "account_id",
+            "symbol",
+            "break_type",
+            name="uq_recon_break_tenant_account_symbol_type",
+        ),
     )

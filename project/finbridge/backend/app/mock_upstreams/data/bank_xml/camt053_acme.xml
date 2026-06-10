@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.08">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>ACME-STMT-2026-05</MsgId>
+      <CreDtTm>2026-06-01T08:30:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>ACME-STMT-0001</Id>
+      <CreDtTm>2026-06-01T08:30:00</CreDtTm>
+      <Acct>
+        <Id>
+          <IBAN>DE89370400440532013000</IBAN>
+        </Id>
+        <Ccy>USD</Ccy>
+        <Ownr>
+          <Nm>ACME Capital Ltd</Nm>
+        </Ownr>
+      </Acct>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>OPBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">125000.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2026-05-01</Dt>
+        </Dt>
+      </Bal>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>CLBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">126512.50</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2026-05-31</Dt>
+        </Dt>
+      </Bal>
+      <Ntry>
+        <NtryRef>ACME-NTRY-0001</NtryRef>
+        <Amt Ccy="USD">1850.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>
+          <Cd>BOOK</Cd>
+        </Sts>
+        <BookgDt>
+          <Dt>2026-05-15</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2026-05-15</Dt>
+        </ValDt>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>ACME-DIV-AAPL-2026Q1</EndToEndId>
+            </Refs>
+            <Amt Ccy="USD">1850.00</Amt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+            <RmtInf>
+              <Ustrd>Dividend payout ACME AAPL Q1</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryRef>ACME-NTRY-0002</NtryRef>
+        <Amt Ccy="USD">320.75</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>
+          <Cd>BOOK</Cd>
+        </Sts>
+        <BookgDt>
+          <Dt>2026-05-18</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2026-05-18</Dt>
+        </ValDt>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>ACME-FEE-CUSTODY-2026-05</EndToEndId>
+            </Refs>
+            <Amt Ccy="USD">320.75</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RmtInf>
+              <Ustrd>Custody fee</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryRef>ACME-NTRY-0003</NtryRef>
+        <Amt Ccy="USD">640.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>
+          <Cd>BOOK</Cd>
+        </Sts>
+        <BookgDt>
+          <Dt>2026-05-22</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2026-05-22</Dt>
+        </ValDt>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>ACME-DIV-MSFT-2026Q1</EndToEndId>
+            </Refs>
+            <Amt Ccy="USD">640.00</Amt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+            <RmtInf>
+              <Ustrd>Dividend payout ACME MSFT Q1</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryRef>ACME-NTRY-0004</NtryRef>
+        <Amt Ccy="USD">45.50</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>
+          <Cd>BOOK</Cd>
+        </Sts>
+        <BookgDt>
+          <Dt>2026-05-28</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2026-05-28</Dt>
+        </ValDt>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>ACME-FEE-FX-2026-05</EndToEndId>
+            </Refs>
+            <Amt Ccy="USD">45.50</Amt>
+            <CdtDbtInd>DBIT</CdtDbtInd>
+            <RmtInf>
+              <Ustrd>FX conversion fee</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>
