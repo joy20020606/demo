@@ -7,7 +7,8 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
-from app.db.models import Instrument, InstrumentType, Transaction
+from app.config import get_settings
+from app.db.models import Instrument, InstrumentType, Outbox, OutboxStatus, Transaction
 from app.normalize import CanonicalTxn
 
 
@@ -92,4 +93,29 @@ def upsert_transaction(
         .returning(Transaction.id)
     )
     inserted_id = session.execute(stmt).scalar_one_or_none()
-    return inserted_id is not None
+    if inserted_id is None:
+        return False
+
+    settings = get_settings()
+    payload = {
+        "source_message_id": txn.source_message_id,
+        "account_id": txn.account_id,
+        "symbol": txn.symbol,
+        "txn_type": str(txn.txn_type),
+        "quantity": str(txn.quantity),
+        "price": str(txn.price),
+        "amount": str(txn.amount),
+        "currency": txn.currency,
+        "trade_date": txn.trade_date.isoformat(),
+        "source": source,
+    }
+    session.add(
+        Outbox(
+            tenant_id=tenant_id,
+            topic=settings.kafka_topic,
+            event_type="transaction.created",
+            payload=payload,
+            status=OutboxStatus.pending,
+        )
+    )
+    return True

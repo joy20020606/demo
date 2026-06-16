@@ -14,6 +14,14 @@ class Settings(BaseSettings):
 
     cors_origins: str = "http://localhost:3000"
 
+    kafka_enabled: bool = False
+    kafka_bootstrap: str = "redpanda:9092"
+    kafka_topic: str = "finbridge.events"
+    kafka_security_protocol: str = ""
+    kafka_sasl_mechanism: str = ""
+    kafka_sasl_username: str = ""
+    kafka_sasl_password: str = ""
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]

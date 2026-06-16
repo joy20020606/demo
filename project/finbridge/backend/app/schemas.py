@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 from decimal import Decimal
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -8,6 +9,7 @@ from app.db.models import (
     ConnectorRunStatus,
     DeadLetterStatus,
     InstrumentType,
+    OutboxStatus,
     ReconciliationBreakStatus,
     ReconciliationBreakType,
     TransactionType,
@@ -116,3 +118,26 @@ class ReconciliationBreakOut(BaseModel):
     delta: Decimal
     status: ReconciliationBreakStatus
     detected_at: datetime
+
+
+class OutboxOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    tenant_id: uuid.UUID
+    topic: str
+    event_type: str
+    payload: dict[str, Any]
+    status: OutboxStatus
+    created_at: datetime
+    published_at: datetime | None
+
+
+class NotificationLogOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    tenant_id: uuid.UUID
+    event_type: str
+    payload: dict[str, Any]
+    received_at: datetime

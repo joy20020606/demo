@@ -7,6 +7,7 @@ from sqlalchemy import text
 from app.api import (
     connectors,
     dead_letter,
+    events,
     instruments,
     positions,
     reconciliation,
@@ -48,6 +49,7 @@ app.include_router(transactions.router)
 app.include_router(connectors.router)
 app.include_router(dead_letter.router)
 app.include_router(reconciliation.router)
+app.include_router(events.router)
 
 
 @app.get("/health")

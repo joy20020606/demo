@@ -5,7 +5,7 @@ WORKDIR /app
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
 
 COPY pyproject.toml ./
-RUN pip install --upgrade pip && pip install ".[dev]"
+RUN pip install --upgrade pip && pip install ".[dev,kafka]"
 
 COPY app ./app
 COPY tests ./tests
