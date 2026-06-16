@@ -60,4 +60,4 @@ def health() -> dict:
             conn.execute(text("SELECT 1"))
     except Exception:  # noqa: BLE001
         db_ok = False
-    return {"status": "ok", "db": db_ok, "mock_upstreams_url": _s.mock_upstreams_url}
+    return {"status": "ok", "db": db_ok}
