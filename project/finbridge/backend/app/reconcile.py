@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
+from app.config import get_settings
 from app.db.models import (
     Instrument,
     ReconciliationBreak,
@@ -15,12 +16,12 @@ from app.db.models import (
     TransactionType,
 )
 
-BASE_URL = "http://mock_upstreams:9001"
 TOLERANCE = Decimal("1e-9")
 
 
 def _fetch_declared(slug: str) -> list[dict]:
-    resp = httpx.get(f"{BASE_URL}/positions/declared", params={"tenant": slug}, timeout=10.0)
+    base_url = get_settings().mock_upstreams_url
+    resp = httpx.get(f"{base_url}/positions/declared", params={"tenant": slug}, timeout=10.0)
     resp.raise_for_status()
     return resp.json()
 

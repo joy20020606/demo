@@ -5,6 +5,7 @@ import httpx
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.config import get_settings
 from app.connectors.base import ConnectorResult, upsert_transaction
 from app.db.models import Tenant
 from app.normalize import normalize_trade
@@ -13,12 +14,12 @@ from app.resilience.retry import fetch_retry
 
 name = "trading_rest"
 SOURCE = "trading_rest"
-BASE_URL = "http://mock_upstreams:9001"
 
 
 @fetch_retry
 def _fetch(slug: str) -> list[dict]:
-    resp = httpx.get(f"{BASE_URL}/trades", params={"tenant": slug}, timeout=10.0)
+    base_url = get_settings().mock_upstreams_url
+    resp = httpx.get(f"{base_url}/trades", params={"tenant": slug}, timeout=10.0)
     resp.raise_for_status()
     return resp.json()
 

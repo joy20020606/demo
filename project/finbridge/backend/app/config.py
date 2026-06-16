@@ -14,6 +14,8 @@ class Settings(BaseSettings):
 
     cors_origins: str = "http://localhost:3000"
 
+    mock_upstreams_url: str = "http://mock_upstreams:9001"
+
     kafka_enabled: bool = False
     kafka_bootstrap: str = "redpanda:9092"
     kafka_topic: str = "finbridge.events"
