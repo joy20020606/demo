@@ -15,9 +15,12 @@
 
 ## Live Demo
 
-- 🌐 前端(Vercel):`（部署後補）`
-- 📖 API Docs(Railway `/docs`):`（部署後補）`
+- 🌐 前端(Vercel):https://demo-1bgd.vercel.app
+- 📖 API Docs(Railway `/docs`):https://demo-production-54c7.up.railway.app/docs
 - 💻 Repo:https://github.com/joy20020606/demo/tree/main/project/finbridge
+
+> 試玩:右上切 **acme** → Connectors 跑 trading_rest → Reconciliation 跑對帳 → 看到 AAPL qty_mismatch delta 20。
+> 切 **globex** → Connectors 跑 csv_batch → 出現 partial(有筆故意壞的) → Dead Letter 頁可以 Replay。
 
 ## Demo 截圖
 
