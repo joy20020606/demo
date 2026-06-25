@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: raw
+    database: warehouse
+    schema: raw
+    description: "Source 系統 OLTP 表(由 simulator 模擬)"
+    tables:
+      - name: orders
+        description: "每一筆訂單"
+        columns:
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            tests:
+              - not_null
+          - name: amount_cents
+            tests:
+              - not_null
+      - name: customers
+        columns:
+          - name: customer_id
+            tests:
+              - unique
+              - not_null
+      - name: products
+        columns:
+          - name: product_id
+            tests:
+              - unique
+              - not_null
