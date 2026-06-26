@@ -1,0 +1,93 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+.installed.cfg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# --- Node / Frontend ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+.next/
+.turbo/
+out/
+build/
+
+# Package manager lockfile dupes (keep one)
+# (we ship pnpm-lock.yaml for the frontend)
+yarn.lock
+package-lock.json
+
+# --- Environment ---
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+!.env.example
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs ---
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Docker / local state ---
+*.pid
+.docker/
+postgres-data/
+pgdata/
+
+# --- Alembic (keep migrations, ignore local sqlite scratch) ---
+*.sqlite
+*.sqlite3
+*.db
+
+# --- Misc ---
+.cache/
+.tmp/
+tmp/
