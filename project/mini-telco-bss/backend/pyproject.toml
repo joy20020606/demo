@@ -2,7 +2,6 @@
 name = "mini-telco-bss"
 version = "0.1.0"
 description = "Telco BSS Lite — Python full-stack demo with clean layered architecture and classic OO design patterns"
-readme = "../README.md"
 requires-python = ">=3.12"
 authors = [{ name = "Joy Chuang", email = "joy20020606@gmail.com" }]
 license = { text = "MIT" }
@@ -16,7 +15,7 @@ dependencies = [
     "pydantic[email]>=2.9.0",
     "pydantic-settings>=2.6.0",
     "python-jose[cryptography]>=3.3.0",
-    "passlib[bcrypt]>=1.7.4",
+    "bcrypt>=4.2.0",
     "python-multipart>=0.0.17",
     "slowapi>=0.1.9",
     "prometheus-client>=0.21.0",
@@ -33,7 +32,6 @@ dev = [
     "factory-boy>=3.3.1",
     "ruff>=0.7.0",
     "mypy>=1.13.0",
-    "types-passlib>=1.7.7.20240819",
     "types-python-jose>=3.3.4.20240106",
 ]
 
