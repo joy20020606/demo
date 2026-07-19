@@ -67,11 +67,14 @@ def _score(samples: list[dict]) -> dict:
     embedder = LangchainEmbeddingsWrapper(OpenAIEmbeddings(model="text-embedding-3-small"))
 
     dataset = EvaluationDataset.from_list(samples)
+    # raise_exceptions=False: judge LLM occasionally returns non-JSON (empty / prose
+    # instead of the expected JSON). Skip failed samples (NaN) instead of crashing.
     result = evaluate(
         dataset=dataset,
         metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
         llm=judge,
         embeddings=embedder,
+        raise_exceptions=False,
     )
     df = result.to_pandas()
     return {
