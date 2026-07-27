@@ -67,6 +67,49 @@ Polyglot：**Python（FastAPI）RAG/Agent 後端 + TypeScript（Next.js）前端
 
 ## RAG Pipeline
 
+### 心智圖
+
+![RAG Pipeline 心智圖](docs/architecture/rag-pipeline-mindmap.png)
+
+### 流程圖(GitHub 原生渲染)
+
+```mermaid
+flowchart TD
+    Q["① 問題 + Query Expansion<br/>HyDE、multi-query(可選)"]
+    HYB{"分岔:use_hybrid?<br/>開關決定走哪條"}
+    VEC["向量檢索<br/>pgvector · HNSW"]
+    VECH["向量<br/>HNSW"]
+    KW["關鍵字<br/>GIN"]
+    RRF["RRF 融合<br/>只看排名,合成一張"]
+    MERGE["兩條匯合:去重 → 門檻 → Rerank → top 3<br/>retriever.py 後半段"]
+    LG["④ LangGraph 生成 + 引用護欄<br/>掛不上引用就放寬重檢索一次"]
+    ANS["⑤ 帶 [n] 來源標記的答案"]
+
+    Q --> HYB
+    HYB -- False --> VEC
+    HYB -- True --> VECH
+    HYB -- True --> KW
+    VECH --> RRF
+    KW --> RRF
+    VEC --> MERGE
+    RRF --> MERGE
+    MERGE --> LG
+    LG --> ANS
+
+    classDef stage fill:#334155,stroke:#475569,color:#fff
+    classDef branch fill:#78350f,stroke:#92400e,color:#fff
+    classDef vector fill:#4c1d95,stroke:#5b21b6,color:#fff
+    classDef keyword fill:#14532d,stroke:#166534,color:#fff
+    classDef fusion fill:#1e3a8a,stroke:#1d4ed8,color:#fff
+    class Q,MERGE,ANS stage
+    class HYB branch
+    class VEC,VECH vector
+    class KW keyword
+    class RRF,LG fusion
+```
+
+### 文字版(對照 code)
+
 ```
 query
  → 查詢擴增 (HyDE + Multi-query)          retrieval/query_expand.py
