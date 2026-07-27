@@ -118,7 +118,53 @@ mini-amazon-ads-ai/
 
 ## 🤖 AI Agent 設計
 
-採用 **Tool Use + Loop** 架構,Agent 自主決策每一步:
+採用 **Tool Use + Loop** 架構,Agent 自主決策每一步。
+
+### 心智圖(完整流程 + Human-in-the-loop)
+
+![AI Agent Loop 心智圖](docs/architecture/ai-agent-loop-mindmap.png)
+
+### 流程圖(GitHub 原生渲染)
+
+```mermaid
+flowchart TD
+    U["使用者:對某 campaign 點「AI 分析」,帶入目標 ACOS<br/>前端 Next.js → 打後端 /api/ai/analyze"]
+    API["api 層 (ai.py):驗 JWT、取 tenant_id、確認 campaign 屬於此租戶<br/>從 DB 撈 campaign 的 target_acos,傳給 agent"]
+    LOOP["★ 核心:手刻 Agent Loop (ai_agent.py, for 迴圈最多 8 輪)"]
+    CLAUDE["呼叫 Claude (官方 SDK)<br/>給 system prompt + 三工具"]
+    DECIDE["模型決定呼叫哪個工具<br/>看 stop_reason 判斷"]
+    TOOLS["三個工具 (execute_tool 執行,兩讀一寫)<br/>compare_with_target (現況/7天) · query_metrics (趨勢/可調天數) · create_recommendation (寫建議/pending)<br/>結果以 role=user 塞回 messages,迴圈繼續"]
+    OUT["模型輸出最終分析 + trace (每輪思考與工具呼叫)<br/>stop_reason == end_turn 才結束 (否則跑滿 8 輪兜底)"]
+    REC["★ 建議存 DB,status = pending (不直接改出價)<br/>Human-in-the-loop:AI 給判斷,人保留決定權"]
+    REVIEW["使用者在前端審核 → accepted / rejected<br/>PATCH /api/ai/recommendations/{id}"]
+    STACK["底層:PostgreSQL (交易型:campaign/user/建議) + ClickHouse (廣告指標聚合) + JWT 多租戶"]
+
+    U --> API
+    API --> LOOP
+    LOOP --> CLAUDE
+    CLAUDE --> DECIDE
+    DECIDE --> TOOLS
+    TOOLS -.->|迴圈| CLAUDE
+    DECIDE --> OUT
+    OUT --> REC
+    REC --> REVIEW
+    REVIEW --> STACK
+
+    classDef entry fill:#334155,stroke:#475569,color:#fff
+    classDef api fill:#1e40af,stroke:#1d4ed8,color:#fff
+    classDef core fill:#4c1d95,stroke:#5b21b6,color:#fff
+    classDef claude fill:#78350f,stroke:#92400e,color:#fff
+    classDef tools fill:#14532d,stroke:#166534,color:#fff
+    classDef human fill:#7c2d12,stroke:#9a3412,color:#fff
+    class U,OUT,STACK entry
+    class API,REVIEW api
+    class LOOP core
+    class CLAUDE,DECIDE claude
+    class TOOLS tools
+    class REC human
+```
+
+### 序列圖(簡化版,快速掌握迴圈)
 
 ```mermaid
 sequenceDiagram
