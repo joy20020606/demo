@@ -32,6 +32,66 @@
 
 ## 架構
 
+### 心智圖(資料流全貌)
+
+![FinBridge Pipeline 心智圖](docs/architecture/finbridge-pipeline-mindmap.png)
+
+### Pipeline 流程圖(GitHub 原生渲染)
+
+```mermaid
+flowchart TD
+    CSV["CSV 批次<br/>csv_batch (券商)"]
+    XML["銀行 XML<br/>bank_xml (camt.053)"]
+    REST["REST API<br/>rest_trading (即時)"]
+
+    BASE["connector/base.py (共用抽象 Protocol)<br/>新增來源只要實作 run() 介面"]
+    NORM["normalize.py → CanonicalTxn (統一格式)<br/>三種異質格式收斂成同一種交易模型"]
+    UPSERT["upsert_transaction: on_conflict_do_nothing<br/>content_hash + (tenant, source, msg_id) 唯一鍵<br/>重複訊息不會重複寫 = 冪等性"]
+
+    OUTBOX["同一 transaction 內:寫交易 + 寫 Outbox<br/>再由 publisher 掃 Outbox 發到 Kafka<br/>避免「DB 寫了但事件沒發」的不一致"]
+    STREAM["streaming/<br/>publisher 發布 → consumer 消費<br/>Kafka 事件流"]
+
+    RES["resilience/<br/>retry.py 重試 → 耗盡進<br/>deadletter.py 死信佇列 (可查可重放)"]
+    RECON["reconcile.py 對帳<br/>比對上游與本地,找出差異<br/>金融資料的最終守門員"]
+
+    API["API 層:transactions / positions / reconciliation / dead_letter / events<br/>前端:connectors、reconciliation、dead-letter 頁 + 多租戶切換"]
+    STACK["貫穿全部:多租戶隔離 (tenant_id) · PostgreSQL · CI (.github/workflows)"]
+
+    CSV --> BASE
+    XML --> BASE
+    REST --> BASE
+    BASE --> NORM
+    NORM --> UPSERT
+    UPSERT --> OUTBOX
+    UPSERT --> STREAM
+    OUTBOX --> RES
+    OUTBOX --> RECON
+    RES --> API
+    RECON --> API
+    STREAM --> API
+    API --> STACK
+
+    classDef source fill:#334155,stroke:#475569,color:#fff
+    classDef abstract fill:#4c1d95,stroke:#5b21b6,color:#fff
+    classDef normalize fill:#065f46,stroke:#047857,color:#fff
+    classDef idem fill:#78350f,stroke:#92400e,color:#fff
+    classDef outbox fill:#7c2d12,stroke:#9a3412,color:#fff
+    classDef kafka fill:#1e3a8a,stroke:#1d4ed8,color:#fff
+    classDef resilience fill:#3730a3,stroke:#4338ca,color:#fff
+    classDef recon fill:#14532d,stroke:#166534,color:#fff
+    class CSV,XML,REST source
+    class BASE abstract
+    class NORM normalize
+    class UPSERT idem
+    class OUTBOX outbox
+    class STREAM kafka
+    class RES resilience
+    class RECON recon
+    class API,STACK source
+```
+
+### 部署視圖(對外連線 + Outbox 優雅降級)
+
 ```
    上游(mock,自帶於 repo)                FinBridge 後端 (FastAPI :8002)            前端 (Next.js)
  ┌─────────────────────────┐         ┌──────────────────────────────────┐    ┌────────────────┐
