@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOEIC 3000 單字練習</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📘</text></svg>">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="logo"><span class="dot"></span>TOEIC 3000 <small id="wordCount"></small></div>
+    <div class="spacer"></div>
+    <button class="icon-btn ghost" id="themeBtn" title="切換深色/淺色">🌗</button>
+    <button class="ghost" id="navHome">首頁</button>
+    <button class="ghost" id="navList">單字表</button>
+    <button class="ghost" id="navStats">統計</button>
+  </header>
+
+  <!-- ========== 首頁 / 設定 ========== -->
+  <section id="home">
+    <div class="card">
+      <h2>📊 學習進度</h2>
+      <div class="stats" id="homeStats"></div>
+      <div style="margin-top:14px">
+        <div class="row" style="justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px">
+          <span>已精熟（連續答對 3 次以上）</span><span id="masterPct">0%</span>
+        </div>
+        <div class="bar"><i id="masterBar" style="width:0%"></i></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🎯 練習模式</h2>
+      <div class="mode-grid" id="modeGrid">
+        <button class="mode on" data-mode="en2zh"><b>英 → 中</b><span>看英文，選中文字義</span></button>
+        <button class="mode" data-mode="zh2en"><b>中 → 英</b><span>看中文，選英文單字</span></button>
+        <button class="mode" data-mode="spell"><b>拼字測驗</b><span>看中文，拼出英文</span></button>
+        <button class="mode" data-mode="flash"><b>單字卡</b><span>翻卡自我評量</span></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ 出題範圍</h2>
+
+      <div class="field">
+        <h3>難度等級</h3>
+        <div class="row" id="levelChips">
+          <div class="chip on" data-lv="1">Level 1 · 基礎</div>
+          <div class="chip on" data-lv="2">Level 2 · 進階</div>
+          <div class="chip on" data-lv="3">Level 3 · 高階</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <h3>詞性</h3>
+        <div class="row" id="posChips"></div>
+      </div>
+
+      <div class="field">
+        <h3>題庫來源</h3>
+        <div class="row" id="poolChips">
+          <div class="chip on" data-pool="all">全部單字</div>
+          <div class="chip" data-pool="wrong">只練錯過的</div>
+          <div class="chip" data-pool="star">我的收藏 ⭐</div>
+          <div class="chip" data-pool="new">尚未練過</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <h3>題數</h3>
+        <div class="row" id="countChips">
+          <div class="chip" data-n="10">10 題</div>
+          <div class="chip on" data-n="20">20 題</div>
+          <div class="chip" data-n="30">30 題</div>
+          <div class="chip" data-n="50">50 題</div>
+          <div class="chip" data-n="0">全部</div>
+        </div>
+      </div>
+
+      <div class="row" style="align-items:center">
+        <label class="muted"><input type="checkbox" id="smartOrder" checked> 智慧排序（錯過的字優先出現）</label>
+        <label class="muted"><input type="checkbox" id="autoSpeak"> 自動發音</label>
+      </div>
+
+      <div class="row" style="margin-top:18px;align-items:center">
+        <button class="primary" id="startBtn">開始練習</button>
+        <span class="muted" id="poolInfo"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 測驗 ========== -->
+  <section id="quiz" class="hidden">
+    <div class="card">
+      <div class="qhead">
+        <span id="qProgress">1 / 20</span>
+        <span class="lvl" id="qLevel">L1</span>
+        <span class="spacer"></span>
+        <span id="qScore">✅ 0　❌ 0</span>
+        <button class="star" id="starBtn" title="收藏此字">☆</button>
+        <button class="icon-btn ghost" id="speakBtn" title="發音">🔊</button>
+      </div>
+      <div class="bar" style="margin-bottom:14px"><i id="qBar" style="width:0%"></i></div>
+
+      <div id="qBody"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="row" style="margin-top:18px">
+        <button class="ghost" id="quitBtn">結束練習</button>
+        <span class="spacer"></span>
+        <button class="primary hidden" id="nextBtn">下一題 →</button>
+      </div>
+      <p class="muted" style="margin:12px 0 0" id="kbHint"></p>
+    </div>
+  </section>
+
+  <!-- ========== 結果 ========== -->
+  <section id="result" class="hidden">
+    <div class="card center">
+      <h2 style="margin-bottom:4px">練習結果</h2>
+      <div class="big-score" id="rScore">0%</div>
+      <p class="muted" id="rDetail"></p>
+      <div class="row" style="justify-content:center;margin-top:16px">
+        <button class="primary" id="againBtn">再練一輪</button>
+        <button class="ghost" id="reviewWrongBtn">複習這輪錯的</button>
+        <button class="ghost" id="backHomeBtn">回首頁</button>
+      </div>
+    </div>
+    <div class="card" id="rWrongCard">
+      <h2>❌ 本輪答錯 (<span id="rWrongCount">0</span>)</h2>
+      <div id="rWrongList"></div>
+    </div>
+  </section>
+
+  <!-- ========== 單字表 ========== -->
+  <section id="list" class="hidden">
+    <div class="card">
+      <h2>📚 單字表</h2>
+      <input type="text" class="search" id="listSearch" placeholder="搜尋英文或中文…">
+      <div class="tabs" id="listTabs">
+        <button class="on" data-f="all">全部</button>
+        <button data-f="1">Level 1</button>
+        <button data-f="2">Level 2</button>
+        <button data-f="3">Level 3</button>
+        <button data-f="star">收藏 ⭐</button>
+        <button data-f="wrong">錯過的</button>
+        <button data-f="mastered">已精熟</button>
+      </div>
+      <p class="muted" id="listInfo"></p>
+      <table><tbody id="listBody"></tbody></table>
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <button class="ghost hidden" id="moreBtn">載入更多</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 統計 ========== -->
+  <section id="stats" class="hidden">
+    <div class="card">
+      <h2>📈 學習統計</h2>
+      <div class="stats" id="statGrid"></div>
+    </div>
+    <div class="card">
+      <h2>🔥 最需要加強的單字</h2>
+      <table><tbody id="weakBody"></tbody></table>
+      <p class="muted" id="weakEmpty"></p>
+    </div>
+    <div class="card">
+      <h2>🗂️ 資料管理</h2>
+      <p class="muted">學習紀錄儲存在本機瀏覽器（localStorage），不會上傳。</p>
+      <div class="row">
+        <button class="ghost" id="exportBtn">匯出紀錄 JSON</button>
+        <button class="ghost" id="importBtn">匯入紀錄</button>
+        <button class="ghost" id="resetBtn" style="color:var(--bad)">清除所有紀錄</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" class="hidden">
+    </div>
+  </section>
+
+</div>
+<script src="data/words.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
