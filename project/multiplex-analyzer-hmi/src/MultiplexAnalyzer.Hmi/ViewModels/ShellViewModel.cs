@@ -15,11 +15,11 @@ public partial class ShellViewModel : ObservableObject
     private AppTheme theme = ThemeService.Current;
 
     public ShellViewModel()
-        : this(new FakeDeviceService(), new FakePlateService())
+        : this(new FakeDeviceService(), new FakePlateService(), new FakeLogService())
     {
     }
 
-    public ShellViewModel(IDeviceService device, IPlateService plateService)
+    public ShellViewModel(IDeviceService device, IPlateService plateService, ILogService logService)
     {
         Dashboard = new DashboardViewModel(device);
 
@@ -28,7 +28,7 @@ public partial class ShellViewModel : ObservableObject
             new NavItemViewModel("Dashboard", "Icon.Dashboard", Dashboard),
             new NavItemViewModel("Plate", "Icon.PlateMap", new PlateMapViewModel(plateService)),
             new NavItemViewModel("Settings", "Icon.Settings", new SettingsViewModel()),
-            new NavItemViewModel("Log", "Icon.EventLog", new EventLogViewModel())
+            new NavItemViewModel("Log", "Icon.EventLog", new EventLogViewModel(logService))
         ];
 
         selectedNav = NavItems[0];

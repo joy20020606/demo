@@ -1,0 +1,189 @@
+<UserControl x:Class="MultiplexAnalyzer.Hmi.Views.EventLogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <Style x:Key="LevelPill" TargetType="Border">
+            <Setter Property="CornerRadius" Value="{StaticResource Radius.S}"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{DynamicResource Brush.Surface.Sunken}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Level}" Value="Warning">
+                    <Setter Property="Background" Value="{DynamicResource Brush.Status.Paused}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Level}" Value="Error">
+                    <Setter Property="Background" Value="{DynamicResource Brush.Status.Error}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="LevelPillText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Font.Family}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Secondary}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Level}" Value="Warning">
+                    <Setter Property="Foreground" Value="{DynamicResource Brush.Text.OnAccent}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Level}" Value="Error">
+                    <Setter Property="Foreground" Value="{DynamicResource Brush.Text.OnAccent}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <DataTemplate x:Key="LogRowTemplate">
+            <Grid Height="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding TimeLabel}"
+                           Style="{StaticResource Text.Caption}" VerticalAlignment="Center"/>
+                <Border Grid.Column="1" Style="{StaticResource LevelPill}">
+                    <TextBlock Text="{Binding Level}" Style="{StaticResource LevelPillText}"/>
+                </Border>
+                <TextBlock Grid.Column="2" Text="{Binding Source}"
+                           Style="{StaticResource Text.Caption}" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="3" Text="{Binding Message}"
+                           Style="{StaticResource Text.Body}" VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="LogItem" TargetType="ListBoxItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Root" Padding="16,0"
+                                BorderBrush="{DynamicResource Brush.Border.Subtle}"
+                                BorderThickness="0,0,0,1"
+                                Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Surface.Raised}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LogList" TargetType="ListBox">
+            <Setter Property="Background" Value="{DynamicResource Brush.Surface.Base}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Subtle}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource LogItem}"/>
+            <Setter Property="ItemTemplate" Value="{StaticResource LogRowTemplate}"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsVirtualizationEnabled}" Value="False">
+                    <Setter Property="ItemsPanel">
+                        <Setter.Value>
+                            <ItemsPanelTemplate>
+                                <StackPanel/>
+                            </ItemsPanelTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Style="{StaticResource Page.Root}" Margin="{StaticResource Space.5.All}">
+        <Grid.RenderTransform>
+            <TranslateTransform Y="8"/>
+        </Grid.RenderTransform>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="{Binding Title}" Style="{StaticResource Text.Display}"/>
+            <TextBlock Text="{Binding Subtitle}" Style="{StaticResource Text.Caption}" Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="0,0,0,16">
+            <StackPanel Orientation="Horizontal">
+                <ListBox Style="{StaticResource SegmentedControl}"
+                         ItemsSource="{Binding Levels}"
+                         SelectedItem="{Binding SelectedLevel}"
+                         Margin="0,0,12,0"/>
+                <TextBox Style="{StaticResource TextBox.Search}"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,0,12,0"/>
+                <Button Content="Clear" Style="{StaticResource Button.Secondary}" Height="40"
+                        Command="{Binding ClearFiltersCommand}"/>
+            </StackPanel>
+            <TextBlock Style="{StaticResource Text.Caption}" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Run Text="{Binding VisibleCount, Mode=OneWay}"/>
+                <Run Text="of"/>
+                <Run Text="{Binding TotalCount, Mode=OneWay}"/>
+                <Run Text="entries"/>
+            </TextBlock>
+        </Grid>
+
+        <Border Grid.Row="2" Margin="0,0,0,16"
+                Background="{DynamicResource Brush.Surface.Raised}"
+                BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1"
+                CornerRadius="{StaticResource Radius.M}" Padding="20,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ToggleButton Style="{StaticResource ToggleSwitch}"
+                                  IsChecked="{Binding IsVirtualizationEnabled}"/>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="UI virtualization" Style="{StaticResource Text.Body}"/>
+                        <TextBlock Text="VirtualizingStackPanel vs StackPanel" Style="{StaticResource Text.Caption}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Margin="0,0,40,0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding RealizedContainers}" Style="{StaticResource Text.Title}"/>
+                    <TextBlock Text="realized containers" Style="{StaticResource Text.Caption}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="3" Margin="0,0,40,0" VerticalAlignment="Center">
+                    <TextBlock Style="{StaticResource Text.Title}">
+                        <Run Text="{Binding LastRefreshMs, Mode=OneWay}"/><Run Text=" ms"/>
+                    </TextBlock>
+                    <TextBlock Text="filter to first frame" Style="{StaticResource Text.Caption}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="4" VerticalAlignment="Center">
+                    <TextBlock Style="{StaticResource Text.Title}">
+                        <Run Text="{Binding WorkingSetMb, Mode=OneWay}"/><Run Text=" MB"/>
+                    </TextBlock>
+                    <TextBlock Text="private memory" Style="{StaticResource Text.Caption}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ListBox x:Name="LogList" Grid.Row="3"
+                 Style="{StaticResource LogList}"
+                 ItemsSource="{Binding Entries}"/>
+    </Grid>
+</UserControl>
