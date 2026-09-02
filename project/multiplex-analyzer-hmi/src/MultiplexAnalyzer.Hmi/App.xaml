@@ -12,6 +12,9 @@
                 <ResourceDictionary Source="Themes/Controls/Button.xaml"/>
                 <ResourceDictionary Source="Themes/Controls/NavList.xaml"/>
                 <ResourceDictionary Source="Themes/Controls/Page.xaml"/>
+                <ResourceDictionary Source="Themes/Controls/ToggleSwitch.xaml"/>
+                <ResourceDictionary Source="Themes/Controls/SegmentedControl.xaml"/>
+                <ResourceDictionary Source="Themes/Controls/NumericStepper.xaml"/>
                 <ResourceDictionary Source="Themes/DataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

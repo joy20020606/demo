@@ -1,0 +1,72 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="ToggleSwitch" TargetType="ToggleButton">
+        <Setter Property="Width" Value="52"/>
+        <Setter Property="Height" Value="{StaticResource TouchTarget.Min}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid x:Name="Root" Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.18">
+                                        <VisualTransition.GeneratedEasingFunction>
+                                            <CubicEase EasingMode="EaseOut"/>
+                                        </VisualTransition.GeneratedEasingFunction>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+
+                                <VisualState x:Name="Unchecked"/>
+
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="TrackOn"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1" Duration="0:0:0.18"/>
+                                        <DoubleAnimation Storyboard.TargetName="Thumb"
+                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                         To="24" Duration="0:0:0.18">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Indeterminate"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid Width="52" Height="28" VerticalAlignment="Center">
+                            <Border x:Name="TrackOff" CornerRadius="14"
+                                    Background="{DynamicResource Brush.Surface.Sunken}"
+                                    BorderBrush="{DynamicResource Brush.Border.Subtle}"
+                                    BorderThickness="1"/>
+                            <Border x:Name="TrackOn" CornerRadius="14" Opacity="0"
+                                    Background="{DynamicResource Brush.Accent.Default}"/>
+                            <Border x:Name="Thumb" Width="22" Height="22" CornerRadius="11"
+                                    HorizontalAlignment="Left" Margin="3,0,0,0"
+                                    Background="{DynamicResource Brush.Text.OnAccent}"
+                                    BorderBrush="{DynamicResource Brush.Border.Strong}"
+                                    BorderThickness="1">
+                                <Border.RenderTransform>
+                                    <TranslateTransform X="0"/>
+                                </Border.RenderTransform>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
