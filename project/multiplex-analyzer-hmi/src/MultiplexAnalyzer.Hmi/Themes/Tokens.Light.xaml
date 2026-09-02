@@ -1,0 +1,26 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="Brush.Surface.Base"    Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Brush.Surface.Raised"  Color="#F4F4F4"/>
+    <SolidColorBrush x:Key="Brush.Surface.Sunken"  Color="#E0E0E0"/>
+
+    <SolidColorBrush x:Key="Brush.Text.Primary"    Color="#161616"/>
+    <SolidColorBrush x:Key="Brush.Text.Secondary"  Color="#525252"/>
+    <SolidColorBrush x:Key="Brush.Text.Disabled"   Color="#A8A8A8"/>
+    <SolidColorBrush x:Key="Brush.Text.OnAccent"   Color="#FFFFFF"/>
+
+    <SolidColorBrush x:Key="Brush.Border.Subtle"   Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="Brush.Border.Strong"   Color="#8D8D8D"/>
+
+    <SolidColorBrush x:Key="Brush.Accent.Default"  Color="#0F62FE"/>
+    <SolidColorBrush x:Key="Brush.Accent.Hover"    Color="#0353E9"/>
+    <SolidColorBrush x:Key="Brush.Accent.Pressed"  Color="#002D9C"/>
+
+    <SolidColorBrush x:Key="Brush.Status.Idle"     Color="#8D8D8D"/>
+    <SolidColorBrush x:Key="Brush.Status.Running"  Color="#0F62FE"/>
+    <SolidColorBrush x:Key="Brush.Status.Paused"   Color="#D2A106"/>
+    <SolidColorBrush x:Key="Brush.Status.Error"    Color="#DA1E28"/>
+    <SolidColorBrush x:Key="Brush.Status.Ok"       Color="#198038"/>
+
+</ResourceDictionary>

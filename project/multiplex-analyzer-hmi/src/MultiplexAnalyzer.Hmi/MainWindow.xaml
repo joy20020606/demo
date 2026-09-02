@@ -1,0 +1,132 @@
+<Window x:Class="MultiplexAnalyzer.Hmi.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MultiPlex Analyzer HMI - Phase 1 Theme System"
+        Height="820" Width="1180"
+        Background="{DynamicResource Brush.Surface.Base}">
+
+    <Grid Margin="{StaticResource Space.5.All}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,24">
+            <StackPanel>
+                <TextBlock Text="Design Token System" Style="{StaticResource Text.Display}"/>
+                <TextBlock Text="Phase 1 - one dictionary swap repaints the whole app"
+                           Style="{StaticResource Text.Caption}" Margin="0,4,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock x:Name="ThemeLabel" Text="Light"
+                           Style="{StaticResource Text.Body}"
+                           VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <Button Content="Toggle Theme" Style="{StaticResource Button.Primary}"
+                        Click="OnToggleTheme"/>
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <TextBlock Text="Surface + Accent" Style="{StaticResource Text.Title}" Margin="0,0,0,12"/>
+                <UniformGrid Rows="1" Margin="0,0,0,32">
+                    <Border Background="{DynamicResource Brush.Surface.Base}"
+                            BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1"
+                            CornerRadius="{StaticResource Radius.M}" Height="96" Margin="0,0,12,0">
+                        <TextBlock Text="Surface.Base" Style="{StaticResource Text.Caption}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border Background="{DynamicResource Brush.Surface.Raised}"
+                            BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1"
+                            CornerRadius="{StaticResource Radius.M}" Height="96" Margin="0,0,12,0">
+                        <TextBlock Text="Surface.Raised" Style="{StaticResource Text.Caption}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border Background="{DynamicResource Brush.Surface.Sunken}"
+                            BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1"
+                            CornerRadius="{StaticResource Radius.M}" Height="96" Margin="0,0,12,0">
+                        <TextBlock Text="Surface.Sunken" Style="{StaticResource Text.Caption}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border Background="{DynamicResource Brush.Accent.Default}"
+                            CornerRadius="{StaticResource Radius.M}" Height="96">
+                        <TextBlock Text="Accent.Default" Style="{StaticResource Text.Caption}"
+                                   Foreground="{DynamicResource Brush.Text.OnAccent}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </UniformGrid>
+
+                <TextBlock Text="Status" Style="{StaticResource Text.Title}" Margin="0,0,0,12"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,32">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,32,0">
+                        <Ellipse Width="20" Height="20" VerticalAlignment="Center"
+                                 Fill="{DynamicResource Brush.Status.Idle}"/>
+                        <TextBlock Text="Idle" Style="{StaticResource Text.Body}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,32,0">
+                        <Ellipse Width="20" Height="20" VerticalAlignment="Center"
+                                 Fill="{DynamicResource Brush.Status.Running}"/>
+                        <TextBlock Text="Running" Style="{StaticResource Text.Body}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,32,0">
+                        <Ellipse Width="20" Height="20" VerticalAlignment="Center"
+                                 Fill="{DynamicResource Brush.Status.Paused}"/>
+                        <TextBlock Text="Paused" Style="{StaticResource Text.Body}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,32,0">
+                        <Ellipse Width="20" Height="20" VerticalAlignment="Center"
+                                 Fill="{DynamicResource Brush.Status.Error}"/>
+                        <TextBlock Text="Error" Style="{StaticResource Text.Body}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="20" Height="20" VerticalAlignment="Center"
+                                 Fill="{DynamicResource Brush.Status.Ok}"/>
+                        <TextBlock Text="Completed" Style="{StaticResource Text.Body}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Text="Buttons (48dp touch target)" Style="{StaticResource Text.Title}" Margin="0,0,0,12"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,32">
+                    <Button Content="Start Run" Style="{StaticResource Button.Primary}" Margin="0,0,12,0"/>
+                    <Button Content="Load Plate" Style="{StaticResource Button.Secondary}" Margin="0,0,12,0"/>
+                    <Button Content="Disabled" Style="{StaticResource Button.Primary}" IsEnabled="False"/>
+                </StackPanel>
+
+                <Border Background="{DynamicResource Brush.Surface.Raised}"
+                        BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1"
+                        CornerRadius="{StaticResource Radius.M}" Padding="{StaticResource Space.5.All}">
+                    <StackPanel>
+                        <TextBlock Text="StaticResource vs DynamicResource" Style="{StaticResource Text.Title}"/>
+                        <TextBlock Text="Both squares bind to Brush.Surface.Sunken. Toggle the theme and watch only one repaint."
+                                   Style="{StaticResource Text.Caption}" Margin="0,4,0,16"/>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Margin="0,0,32,0">
+                                <Border Width="220" Height="90"
+                                        Background="{StaticResource Brush.Surface.Sunken}"
+                                        BorderBrush="{DynamicResource Brush.Border.Strong}" BorderThickness="1"
+                                        CornerRadius="{StaticResource Radius.S}"/>
+                                <TextBlock Text="StaticResource - frozen at load"
+                                           Style="{StaticResource Text.Caption}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Border Width="220" Height="90"
+                                        Background="{DynamicResource Brush.Surface.Sunken}"
+                                        BorderBrush="{DynamicResource Brush.Border.Strong}" BorderThickness="1"
+                                        CornerRadius="{StaticResource Radius.S}"/>
+                                <TextBlock Text="DynamicResource - live lookup"
+                                           Style="{StaticResource Text.Caption}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
