@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="Themes/Controls/NumericStepper.xaml"/>
                 <ResourceDictionary Source="Themes/Controls/ProgressRing.xaml"/>
                 <ResourceDictionary Source="Themes/Controls/Status.xaml"/>
+                <ResourceDictionary Source="Themes/Controls/PlateMap.xaml"/>
                 <ResourceDictionary Source="Themes/DataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

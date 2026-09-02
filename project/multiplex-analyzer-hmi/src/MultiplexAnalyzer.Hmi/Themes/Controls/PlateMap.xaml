@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MultiplexAnalyzer.Hmi.Controls">
+
+    <Style TargetType="{x:Type controls:PlateMapControl}">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface.Raised}"/>
+        <Setter Property="PlateBrush" Value="{DynamicResource Brush.Surface.Base}"/>
+        <Setter Property="PlateBorderBrush" Value="{DynamicResource Brush.Border.Strong}"/>
+        <Setter Property="LabelBrush" Value="{DynamicResource Brush.Text.Secondary}"/>
+        <Setter Property="WellLowBrush" Value="{DynamicResource Brush.Surface.Sunken}"/>
+        <Setter Property="WellHighBrush" Value="{DynamicResource Brush.Status.Error}"/>
+        <Setter Property="SelectionBrush" Value="{DynamicResource Brush.Accent.Default}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Font.Family}"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+</ResourceDictionary>
