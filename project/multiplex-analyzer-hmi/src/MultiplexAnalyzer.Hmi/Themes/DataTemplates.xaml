@@ -4,7 +4,7 @@
                     xmlns:views="clr-namespace:MultiplexAnalyzer.Hmi.Views">
 
     <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
-        <views:PlaceholderView/>
+        <views:DashboardView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:PlateMapViewModel}">

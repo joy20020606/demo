@@ -1,0 +1,28 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MultiplexAnalyzer.Hmi.Controls">
+
+    <Style TargetType="{x:Type controls:ProgressRing}">
+        <Setter Property="Width" Value="260"/>
+        <Setter Property="Height" Value="260"/>
+        <Setter Property="RingThickness" Value="18"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ProgressRing}">
+                    <Grid>
+                        <Path Data="{TemplateBinding TrackGeometry}"
+                              Stroke="{DynamicResource Brush.Surface.Sunken}"
+                              StrokeThickness="{TemplateBinding RingThickness}"/>
+                        <Path Data="{TemplateBinding ArcGeometry}"
+                              Stroke="{DynamicResource Brush.Accent.Default}"
+                              StrokeThickness="{TemplateBinding RingThickness}"
+                              StrokeStartLineCap="Round"
+                              StrokeEndLineCap="Round"/>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

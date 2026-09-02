@@ -15,6 +15,8 @@
                 <ResourceDictionary Source="Themes/Controls/ToggleSwitch.xaml"/>
                 <ResourceDictionary Source="Themes/Controls/SegmentedControl.xaml"/>
                 <ResourceDictionary Source="Themes/Controls/NumericStepper.xaml"/>
+                <ResourceDictionary Source="Themes/Controls/ProgressRing.xaml"/>
+                <ResourceDictionary Source="Themes/Controls/Status.xaml"/>
                 <ResourceDictionary Source="Themes/DataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
