@@ -8,7 +8,11 @@
                 <ResourceDictionary Source="Themes/Tokens.Light.xaml"/>
                 <ResourceDictionary Source="Themes/Sizing.xaml"/>
                 <ResourceDictionary Source="Themes/Typography.xaml"/>
+                <ResourceDictionary Source="Themes/Icons.xaml"/>
                 <ResourceDictionary Source="Themes/Controls/Button.xaml"/>
+                <ResourceDictionary Source="Themes/Controls/NavList.xaml"/>
+                <ResourceDictionary Source="Themes/Controls/Page.xaml"/>
+                <ResourceDictionary Source="Themes/DataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
