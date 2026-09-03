@@ -25,9 +25,9 @@
 
 ## 為什麼做這個
 
-目標職缺要從 Figma 設計稿實作 Windows 11 IoT 桌面 UI,重點在 Style / Theme / MVVM / 自訂控制項 / Touch / 動畫 / 效能。這個 repo 是針對那份需求的直接回答:**每一頁都為了練一項 JD 技能而存在,沒有多做別的。**
+WPF / XAML UI 工程師這類職缺,通常要求從 Figma 設計稿實作 Windows 桌面 UI,重點在 Style / Theme / MVVM / 自訂控制項 / Touch / 動畫 / 效能。這個 repo 是針對那組需求的直接回答:**每一頁都為了展示一項技能而存在,沒有多做別的。**
 
-| JD 要求 | 在哪裡 |
+| 常見要求 | 在哪裡 |
 |---|---|
 | Figma → WPF/XAML 實作 | `docs/design-token-map.md` — Figma variable 與 XAML key 一對一同名 |
 | Style / ResourceDictionary / ControlTemplate | `Themes/` — token、字級、尺寸,每個控制項一本字典 |
@@ -74,10 +74,10 @@
 
 | 不做 | 理由 |
 |---|---|
-| 後端 / API / 資料庫 | 不在職缺範圍。`IDeviceService`、`IPlateService`、`ILogService` 是介面 + 假實作,接真機時換實作即可 |
+| 後端 / API / 資料庫 | 不在這個作品的範圍。`IDeviceService`、`IPlateService`、`ILogService` 是介面 + 假實作,接真機時換實作即可 |
 | 第三方 UI / 圖表套件 | 這份作品要證明的正是 `ControlTemplate` 和繪製能力,套套件等於把答案遮住 |
 | 真實檢測項目名稱、protocol 化學細節 | 我沒有實際規格。指標用 `M-01 … M-08`,protocol 是四個泛用步驟 |
-| 多語系、表單驗證 | 兩者都是常見題,不是這個職缺要看的 |
+| 多語系、表單驗證 | 兩者都是常見題,不是這個作品要展示的 |
 | DI 容器 | `ShellViewModel` 保留無參數建構子給 XAML 用,另有完整建構子供注入。Production 會拿掉前者 |
 
 **觸控路徑未於實體觸控面板驗證。** Manipulation 程式碼已實作且與滑鼠路徑共用邏輯,但開發期間沒有觸控硬體。
@@ -130,5 +130,3 @@ docs/                            token 對照表、效能筆記、Figma 清單�
 - [`docs/design-token-map.md`](docs/design-token-map.md) — Figma variable ↔ XAML key ↔ Light / Dark 值
 - [`docs/performance.md`](docs/performance.md) — 虛擬化與繪製的量測方法和數據
 - [`docs/figma-checklist.md`](docs/figma-checklist.md) — Figma 檔要建什麼、怎麼對到程式碼
-- [`docs/domain-primer.md`](docs/domain-primer.md) — 多重檢測儀器是什麼,給非生技背景的人
-- [`SPEC.md`](SPEC.md) — 原始規格書與 Phase 計畫
