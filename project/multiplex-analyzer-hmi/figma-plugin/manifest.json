@@ -1,0 +1,9 @@
+{
+  "name": "MultiPlex HMI Design System",
+  "id": "multiplex-hmi-design-system",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": { "allowedDomains": ["none"] }
+}
