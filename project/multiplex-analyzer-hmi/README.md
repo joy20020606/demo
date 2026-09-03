@@ -4,6 +4,7 @@
 
 > A touch-first WPF operator console for a benchtop multiplex diagnostic analyzer. Built to demonstrate production-grade XAML: design-token theming with live Dark/Light switching, hand-drawn geometry, VisualStateManager transitions, lookless custom controls, and a single-`OnRender` 96-well plate map with touch and mouse gestures. No backend by design.
 
+**下載試用:** [Release v1.0.0](https://github.com/joy20020606/demo/releases/tag/hmi-v1.0.0) — 單檔 exe,不用裝 .NET
 **Figma 設計稿:** [MultiPlex HMI Design System](https://www.figma.com/design/W9LbmGUGTpC2e8KO5f2ew9/Untitled?node-id=1-159)(Design System page 有 variables 與 8 個 component,Screens page 有 4 張畫面 × Light / Dark)
 
 ## Figma 稿 vs 實作
@@ -85,6 +86,10 @@ WPF / XAML UI 工程師這類職缺,通常要求從 Figma 設計稿實作 Window
 ---
 
 ## 執行
+
+**不想裝環境?** 直接下載 [Release v1.0.0](https://github.com/joy20020606/demo/releases/tag/hmi-v1.0.0) 的 `MultiplexAnalyzer.exe`,Windows 10 / 11 雙擊即可,不需要安裝 .NET。
+
+從原始碼跑:
 
 ```bash
 dotnet run --project src/MultiplexAnalyzer.Hmi
