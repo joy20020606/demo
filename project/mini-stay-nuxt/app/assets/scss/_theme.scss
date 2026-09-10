@@ -1,0 +1,72 @@
+// 執行期 CSS 變數:只在 main.scss 輸出一次。
+@use 'tokens' as *;
+
+:root {
+  --color-gold: #{$color-gold-500};
+  --color-grey-500: #{$color-grey-500};
+  --color-grey-450: #{$color-grey-450};
+  --color-grey-400: #{$color-grey-400};
+  --color-grey-300: #{$color-grey-300};
+  --color-grey-200: #{$color-grey-200};
+  --color-grey-100: #{$color-grey-100};
+  --color-ink: #{$color-ink};
+  --color-white: #{$color-white};
+  --color-cream: #{$color-cream};
+
+  --font-serif: #{$font-serif};
+  --font-sans: #{$font-sans};
+
+  // Fluid type:Figma 尺寸為上限,375 寬時取下限
+  --fs-h1: clamp(2.75rem, 1.25rem + 5.5vw, 7rem); // 112px
+  --fs-h2: clamp(2rem, 1rem + 3.5vw, 4rem); // 64px (Heading/H3)
+  --fs-h3: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem); // 36px
+  --fs-h4: 1.5rem; // 24px (Heading/H6)
+  --fs-eyebrow: clamp(0.875rem, 0.7rem + 0.7vw, 1.5rem); // 24px
+  --fs-lead: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); // 18px
+  --fs-body: 1rem; // 16px
+  --fs-small: 0.875rem; // 14px
+
+  --lh-tight: 1.24;
+  --lh-snug: 1.26;
+  --lh-body: 1.6;
+
+  // 4px 基準間距
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 60px;
+  --space-10: 80px;
+  --space-11: 100px;
+  --space-12: 120px;
+
+  --container-max: #{$container-max};
+  --container-pad: 32px;
+
+  --header-h: 105px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 240ms;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --container-pad: 72px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --container-pad: 120px;
+    --header-h: 130px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 0ms;
+  }
+}

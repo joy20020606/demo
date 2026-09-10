@@ -1,0 +1,42 @@
+// Design tokens — 純 SCSS 變數與 map,不輸出任何 CSS。
+// 來源:docs/design/figma-notes.md(Figma get_variable_defs)
+@use 'sass:map';
+
+// ---- Colors (Figma 名稱 → hex) ----
+$color-gold-500: #bf9766;
+$color-grey-500: #2d2c2c;
+$color-grey-450: #302f2f;
+$color-grey-400: #575656;
+$color-grey-300: #818080;
+$color-grey-200: #959494;
+$color-grey-100: #bdbdbd;
+$color-ink: #171717;
+$color-white: #ffffff;
+$color-cream: #f7f4ef;
+
+// ---- Typography ----
+$font-serif: 'Forum', 'Times New Roman', Georgia, serif;
+$font-sans: 'Poppins', 'Segoe UI', 'Noto Sans TC', system-ui, sans-serif;
+
+// ---- Breakpoints (mobile-first) ----
+$breakpoints: (
+  sm: 375px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+);
+
+// ---- Layout ----
+$container-max: 1200px;
+$container-pad: (
+  base: 32px,
+  md: 72px,
+  lg: 120px,
+);
+
+@function bp($name) {
+  @if not map.has-key($breakpoints, $name) {
+    @error 'Unknown breakpoint `#{$name}`';
+  }
+  @return map.get($breakpoints, $name);
+}

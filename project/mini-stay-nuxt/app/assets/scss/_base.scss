@@ -1,0 +1,77 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: var(--fs-body);
+  color: var(--color-ink);
+  background: var(--color-white);
+}
+
+body.is-locked {
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  line-height: var(--lh-tight);
+}
+
+h1 {
+  font-size: var(--fs-h1);
+}
+
+h2 {
+  font-size: var(--fs-h2);
+  line-height: var(--lh-snug);
+}
+
+h3 {
+  font-size: var(--fs-h3);
+}
+
+h4 {
+  font-size: var(--fs-h4);
+}
+
+a,
+button,
+input,
+select,
+textarea,
+[tabindex] {
+  @include focus-ring;
+}
+
+.container {
+  @include container;
+}
+
+.eyebrow {
+  @include eyebrow;
+}
+
+.visually-hidden {
+  @include visually-hidden;
+}
+
+.skip-link {
+  @include visually-hidden;
+
+  &:focus {
+    position: fixed;
+    inset: var(--space-4) auto auto var(--space-4);
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: var(--space-2) var(--space-4);
+    clip: auto;
+    background: var(--color-gold);
+    color: var(--color-ink);
+    z-index: 100;
+  }
+}

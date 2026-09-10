@@ -1,0 +1,25 @@
+# Nuxt
+.nuxt
+.output
+.data
+.cache
+dist
+.nitro
+
+# Dependencies
+node_modules
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Tests
+test-results
+playwright-report
+blob-report
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,4 @@
+// tokens 與 mixins 已由 nuxt.config 的 additionalData 注入,這裡只輸出 CSS。
+@use 'theme';
+@use 'reset';
+@use 'base';
