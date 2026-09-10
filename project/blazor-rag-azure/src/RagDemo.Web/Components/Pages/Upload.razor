@@ -1,0 +1,118 @@
+@page "/upload"
+@using RagDemo.Web.Data
+@using RagDemo.Web.Services
+@inject IngestService Ingest
+@inject IChunkRepository Repo
+
+<PageTitle>上傳文件</PageTitle>
+
+<h1>上傳文件</h1>
+<p class="text-muted">支援 .md / .txt,單檔 2 MB 以內。同名檔案重新上傳會整份取代。</p>
+
+<div class="mb-3">
+    <InputFile OnChange="OnFileSelected" accept=".md,.txt" multiple disabled="@_busy" class="form-control" />
+</div>
+
+@if (_busy)
+{
+    <div class="alert alert-info">處理中:@_status</div>
+}
+else if (_status is not null)
+{
+    <div class="alert @(_error ? "alert-danger" : "alert-success")">@_status</div>
+}
+
+<h2 class="h5 mt-4">已匯入的文件</h2>
+@if (_docs is null)
+{
+    <p>載入中…</p>
+}
+else if (_docs.Count == 0)
+{
+    <p class="text-muted">還沒有任何文件。</p>
+}
+else
+{
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr><th>檔名</th><th class="text-end">Chunk 數</th><th>匯入時間 (UTC)</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var d in _docs)
+            {
+                <tr>
+                    <td>@d.SourceFile</td>
+                    <td class="text-end">@d.ChunkCount</td>
+                    <td>@d.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td class="text-end">
+                        <button class="btn btn-outline-danger btn-sm" @onclick="() => Delete(d.SourceFile)" disabled="@_busy">刪除</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private const long MaxBytes = 2 * 1024 * 1024;
+
+    private IReadOnlyList<DocumentSummary>? _docs;
+    private string? _status;
+    private bool _busy;
+    private bool _error;
+
+    protected override async Task OnInitializedAsync() => await Reload();
+
+    private async Task Reload() => _docs = await Repo.ListDocumentsAsync();
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        _busy = true;
+        _error = false;
+        var results = new List<string>();
+
+        try
+        {
+            foreach (var file in e.GetMultipleFiles(maximumFileCount: 10))
+            {
+                _status = $"正在處理 {file.Name}…";
+                StateHasChanged();
+
+                try
+                {
+                    using var reader = new StreamReader(file.OpenReadStream(MaxBytes));
+                    var text = await reader.ReadToEndAsync();
+                    var count = await Ingest.IngestAsync(file.Name, text);
+                    results.Add($"{file.Name}:{count} 個 chunk");
+                }
+                catch (Exception ex)
+                {
+                    _error = true;
+                    results.Add($"{file.Name}:失敗({ex.Message})");
+                }
+            }
+        }
+        finally
+        {
+            _status = string.Join(";", results);
+            _busy = false;
+            await Reload();
+        }
+    }
+
+    private async Task Delete(string sourceFile)
+    {
+        _busy = true;
+        try
+        {
+            var removed = await Repo.DeleteDocumentAsync(sourceFile);
+            _status = $"已刪除 {sourceFile}({removed} 個 chunk)";
+            _error = false;
+        }
+        finally
+        {
+            _busy = false;
+            await Reload();
+        }
+    }
+}
