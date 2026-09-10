@@ -1,0 +1,33 @@
+using Microsoft.Data.SqlTypes;
+using Microsoft.EntityFrameworkCore;
+
+namespace RagDemo.Web.Data;
+
+public class ChunkRepository(AppDbContext db) : IChunkRepository
+{
+    public async Task AddRangeAsync(IEnumerable<DocumentChunk> chunks, CancellationToken ct = default)
+    {
+        db.Chunks.AddRange(chunks);
+        await db.SaveChangesAsync(ct);
+    }
+
+    public async Task<IReadOnlyList<DocumentSummary>> ListDocumentsAsync(CancellationToken ct = default)
+    {
+        var rows = await db.Chunks
+            .GroupBy(c => c.SourceFile)
+            .Select(g => new { SourceFile = g.Key, Count = g.Count(), CreatedAt = g.Min(c => c.CreatedAt) })
+            .OrderBy(r => r.SourceFile)
+            .ToListAsync(ct);
+
+        return rows.Select(r => new DocumentSummary(r.SourceFile, r.Count, r.CreatedAt)).ToList();
+    }
+
+    public Task<int> DeleteDocumentAsync(string sourceFile, CancellationToken ct = default)
+        => db.Chunks.Where(c => c.SourceFile == sourceFile).ExecuteDeleteAsync(ct);
+
+    public async Task<IReadOnlyList<DocumentChunk>> SearchAsync(SqlVector<float> queryEmbedding, int topK, CancellationToken ct = default)
+        => await db.Chunks
+            .OrderBy(c => EF.Functions.VectorDistance("cosine", c.Embedding, queryEmbedding))
+            .Take(topK)
+            .ToListAsync(ct);
+}

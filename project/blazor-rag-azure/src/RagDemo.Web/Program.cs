@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using RagDemo.Web.Api;
 using RagDemo.Web.Components;
+using RagDemo.Web.Data;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddDbContext<AppDbContext>(o =>
+    o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddScoped<IChunkRepository, ChunkRepository>();
 
 var app = builder.Build();
 
