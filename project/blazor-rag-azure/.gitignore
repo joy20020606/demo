@@ -1,0 +1,11 @@
+.env
+bin/
+obj/
+*.user
+.vs/
+.idea/
+TestResults/
+publish/
+*.log
+!.env.example
+!**/wwwroot/lib/**/dist/
