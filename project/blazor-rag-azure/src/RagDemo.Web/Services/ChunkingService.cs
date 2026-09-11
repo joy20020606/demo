@@ -5,6 +5,8 @@ public sealed class ChunkingService(int maxChars = 600, int overlap = 100)
     public int MaxChars { get; } = maxChars;
     public int Overlap { get; } = overlap;
 
+    private int Body => Overlap > 0 ? MaxChars - Overlap - 1 : MaxChars;
+
     public IReadOnlyList<string> Split(string text)
     {
         if (string.IsNullOrWhiteSpace(text)) return [];
@@ -17,7 +19,7 @@ public sealed class ChunkingService(int maxChars = 600, int overlap = 100)
             .SelectMany(HardSplit)
             .ToList();
 
-        var body = MaxChars - Overlap;
+        var body = Body;
         var chunks = new List<string>();
         var current = new List<string>();
         var currentLen = 0;
@@ -51,7 +53,7 @@ public sealed class ChunkingService(int maxChars = 600, int overlap = 100)
 
     private IEnumerable<string> HardSplit(string paragraph)
     {
-        var body = MaxChars - Overlap;
+        var body = Body;
         if (paragraph.Length <= body)
         {
             yield return paragraph;

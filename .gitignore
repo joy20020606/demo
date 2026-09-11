@@ -77,3 +77,4 @@ demo_output.txt
 # Claude Code 本機工具設定(不進 git)
 .claude/launch.json
 .claude/worktrees/
+.playwright-mcp/
