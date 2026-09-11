@@ -84,18 +84,28 @@ def _score(samples: list[dict]) -> dict:
     }
 
 
+def _write_atomic(path, payload: dict) -> None:
+    """Write to a .tmp then rename — never leave a half-written results.json."""
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    tmp.replace(path)
+
+
 def run() -> dict:
     runs = []
     for name, config in VARIANTS.items():
-        samples, avg_latency = _collect(config)
         try:
-            metrics = _score(samples)
-        except Exception as e:  # noqa: BLE001 — keep the dashboard alive if RAGAS deps absent
-            metrics = {"error": str(e)}
-        runs.append({"variant": name, "metrics": metrics, "avg_latency_ms": round(avg_latency)})
+            samples, avg_latency = _collect(config)
+            try:
+                metrics = _score(samples)
+            except Exception as e:  # noqa: BLE001 — RAGAS deps or judge LLM can fail
+                metrics = {"error": str(e)}
+            runs.append({"variant": name, "metrics": metrics, "avg_latency_ms": round(avg_latency)})
+        except Exception as e:  # noqa: BLE001 — never abort the whole run for one variant
+            runs.append({"variant": name, "metrics": {"error": str(e)}, "avg_latency_ms": 0})
 
     output = {"runs": runs, "n_questions": len(GOLDEN_SET)}
-    RESULTS_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    _write_atomic(RESULTS_PATH, output)
     return output
 
 
