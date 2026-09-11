@@ -1,0 +1,45 @@
+{
+  "runs": [
+    {
+      "variant": "vector-only",
+      "metrics": {
+        "faithfulness": 0.9237472766884531,
+        "answer_relevancy": 0.6295375800335193,
+        "context_precision": 0.88888888885,
+        "context_recall": 0.6666666666666666
+      },
+      "avg_latency_ms": 16814
+    },
+    {
+      "variant": "hybrid",
+      "metrics": {
+        "faithfulness": 0.8575757575757575,
+        "answer_relevancy": 0.574795705824378,
+        "context_precision": 0.7222222221861111,
+        "context_recall": 0.6666666666666666
+      },
+      "avg_latency_ms": 16855
+    },
+    {
+      "variant": "hybrid+hyde",
+      "metrics": {
+        "faithfulness": 0.9316666666666666,
+        "answer_relevancy": 0.6295377782561075,
+        "context_precision": 0.7777777777388889,
+        "context_recall": 0.6666666666666666
+      },
+      "avg_latency_ms": 21202
+    },
+    {
+      "variant": "hybrid+hyde+multi",
+      "metrics": {
+        "faithfulness": 0.9185185185185185,
+        "answer_relevancy": 0.6295375800335193,
+        "context_precision": 0.7222222221638889,
+        "context_recall": 0.6666666666666666
+      },
+      "avg_latency_ms": 22769
+    }
+  ],
+  "n_questions": 3
+}
