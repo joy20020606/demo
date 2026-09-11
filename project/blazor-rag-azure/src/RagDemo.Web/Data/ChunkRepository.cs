@@ -30,12 +30,15 @@ public class ChunkRepository(IDbContextFactory<AppDbContext> factory) : IChunkRe
         return await db.Chunks.Where(c => c.SourceFile == sourceFile).ExecuteDeleteAsync(ct);
     }
 
-    public async Task<IReadOnlyList<DocumentChunk>> SearchAsync(SqlVector<float> queryEmbedding, int topK, CancellationToken ct = default)
+    public async Task<IReadOnlyList<ScoredChunk>> SearchAsync(SqlVector<float> queryEmbedding, int topK, CancellationToken ct = default)
     {
         await using var db = await factory.CreateDbContextAsync(ct);
-        return await db.Chunks
-            .OrderBy(c => EF.Functions.VectorDistance("cosine", c.Embedding, queryEmbedding))
+        var rows = await db.Chunks
+            .Select(c => new { Chunk = c, Distance = EF.Functions.VectorDistance("cosine", c.Embedding, queryEmbedding) })
+            .OrderBy(x => x.Distance)
             .Take(topK)
             .ToListAsync(ct);
+
+        return rows.Select(r => new ScoredChunk(r.Chunk, r.Distance)).ToList();
     }
 }

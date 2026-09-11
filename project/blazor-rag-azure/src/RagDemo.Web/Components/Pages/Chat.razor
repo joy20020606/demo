@@ -1,16 +1,23 @@
 @page "/"
+@using RagDemo.Web.Services
+@implements IDisposable
+@inject RagService Rag
 
 <PageTitle>Chat</PageTitle>
 
 <h1>文件問答</h1>
-<p class="text-muted">Phase 1:假回答,尚未接 RAG。已送出 <strong>@_messages.Count(m => m.IsUser)</strong> 個問題。</p>
+<p class="text-muted">根據你上傳的文件回答,並附引用段落。找不到就明說,不編造。</p>
 
 <div class="chat-log mb-3">
-    @foreach (var m in _messages)
+    @foreach (var m in _lines)
     {
         <div class="chat-msg @(m.IsUser ? "chat-user" : "chat-bot")">
             <div class="chat-role">@(m.IsUser ? "你" : "助理")</div>
-            <div class="chat-text">@m.Text</div>
+            <div class="chat-text">@m.Text@(m.Streaming ? "▍" : "")</div>
+            @if (!m.IsUser && m.Sources is not null)
+            {
+                <SourceList Sources="m.Sources" />
+            }
         </div>
     }
 </div>
@@ -18,13 +25,21 @@
 <form class="input-group" @onsubmit="Send">
     <input class="form-control" placeholder="輸入問題,按 Enter 送出"
            @bind="_question" @bind:event="oninput" disabled="@_busy" />
-    <button type="submit" class="btn btn-primary" disabled="@(_busy || string.IsNullOrWhiteSpace(_question))">送出</button>
+    @if (_busy)
+    {
+        <button type="button" class="btn btn-outline-secondary" @onclick="Stop">停止</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary" disabled="@string.IsNullOrWhiteSpace(_question)">送出</button>
+    }
 </form>
 
 @code {
-    private readonly List<ChatMessage> _messages = [];
+    private readonly List<ChatLine> _lines = [];
     private string _question = "";
     private bool _busy;
+    private CancellationTokenSource? _cts;
 
     private async Task Send()
     {
@@ -33,13 +48,50 @@
         var q = _question.Trim();
         _question = "";
         _busy = true;
-        _messages.Add(new ChatMessage(true, q));
+        _lines.Add(new ChatLine(true, q));
+        var answer = new ChatLine(false, "") { Streaming = true };
+        _lines.Add(answer);
 
-        await Task.Delay(300);
-        _messages.Add(new ChatMessage(false, $"(假回答)你問了:「{q}」。Phase 4 之後這裡會用你上傳的文件回答並附引用來源。"));
-
-        _busy = false;
+        _cts = new CancellationTokenSource();
+        try
+        {
+            await foreach (var ev in Rag.AskAsync(q, topK: 5, _cts.Token))
+            {
+                switch (ev)
+                {
+                    case SourcesEvent s: answer.Sources = s.Sources; break;
+                    case TokenEvent t: answer.Text += t.Text; break;
+                    case DoneEvent: break;
+                }
+                StateHasChanged();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            answer.Text += "(已停止)";
+        }
+        catch (Exception ex)
+        {
+            answer.Text += $"(發生錯誤:{ex.Message})";
+        }
+        finally
+        {
+            answer.Streaming = false;
+            _busy = false;
+            _cts.Dispose();
+            _cts = null;
+        }
     }
 
-    private record ChatMessage(bool IsUser, string Text);
+    private void Stop() => _cts?.Cancel();
+
+    public void Dispose() => _cts?.Cancel();
+
+    private sealed class ChatLine(bool isUser, string text)
+    {
+        public bool IsUser { get; } = isUser;
+        public string Text { get; set; } = text;
+        public bool Streaming { get; set; }
+        public IReadOnlyList<Citation>? Sources { get; set; }
+    }
 }

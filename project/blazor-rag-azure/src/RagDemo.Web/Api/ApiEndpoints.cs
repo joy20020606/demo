@@ -1,4 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+using System.Net.ServerSentEvents;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http.HttpResults;
 using RagDemo.Web.Data;
 using RagDemo.Web.Services;
@@ -51,10 +55,39 @@ public static class ApiEndpoints
            .WithName("DeleteDocument")
            .WithSummary("Delete all chunks of a document");
 
+        api.MapPost("/ask", (AskRequest req, RagService rag, CancellationToken ct) =>
+                TypedResults.ServerSentEvents(StreamAsk(req, rag, ct)))
+           .WithName("Ask")
+           .WithSummary("Ask a question over the ingested documents (SSE: sources, token*, done)");
+
         return app;
     }
+
+    private static async IAsyncEnumerable<SseItem<string>> StreamAsk(
+        AskRequest req, RagService rag, [EnumeratorCancellation] CancellationToken ct)
+    {
+        await foreach (var ev in rag.AskAsync(req.Question, req.TopK, ct))
+        {
+            yield return ev switch
+            {
+                SourcesEvent s => new SseItem<string>(JsonSerializer.Serialize(s.Sources, JsonOptions), "sources"),
+                TokenEvent t => new SseItem<string>(t.Text, "token"),
+                DoneEvent d => new SseItem<string>(JsonSerializer.Serialize(new { d.Grounded }, JsonOptions), "done"),
+                _ => throw new InvalidOperationException($"Unknown event {ev.GetType().Name}")
+            };
+        }
+    }
+
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    {
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
 }
 
 public record PingResponse(string Status, DateTimeOffset ServerTime);
 public record IngestResponse(string SourceFile, int ChunkCount);
 public record DeleteResponse(string SourceFile, int RemovedChunks);
+
+public record AskRequest(
+    [property: Required, MinLength(2), MaxLength(1000)] string Question,
+    [property: Range(1, 20)] int TopK = 5);

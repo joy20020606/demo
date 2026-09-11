@@ -19,26 +19,31 @@ builder.Services.AddDbContextFactory<AppDbContext>(o =>
 builder.Services.AddScoped<IChunkRepository, ChunkRepository>();
 
 var openAiKey = builder.Configuration["OpenAI:ApiKey"];
-var useFakeEmbeddings = string.IsNullOrWhiteSpace(openAiKey) || openAiKey == "REPLACE_ME";
-if (useFakeEmbeddings)
+var useFakeAi = string.IsNullOrWhiteSpace(openAiKey) || openAiKey == "REPLACE_ME";
+if (useFakeAi)
 {
     builder.Services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>, DeterministicEmbeddingGenerator>();
+    builder.Services.AddSingleton<IChatClient, DeterministicChatClient>();
 }
 else
 {
+    var openAi = new OpenAIClient(openAiKey);
     var embeddingModel = builder.Configuration["OpenAI:EmbeddingModel"] ?? "text-embedding-3-small";
-    builder.Services.AddEmbeddingGenerator(
-        new OpenAIClient(openAiKey).GetEmbeddingClient(embeddingModel).AsIEmbeddingGenerator());
+    var chatModel = builder.Configuration["OpenAI:ChatModel"] ?? "gpt-4o-mini";
+    builder.Services.AddEmbeddingGenerator(openAi.GetEmbeddingClient(embeddingModel).AsIEmbeddingGenerator());
+    builder.Services.AddChatClient(openAi.GetChatClient(chatModel).AsIChatClient());
 }
 
 builder.Services.AddSingleton(new ChunkingService(maxChars: 600, overlap: 100));
 builder.Services.AddScoped<IngestService>();
+builder.Services.AddScoped<RagService>();
+builder.Services.AddValidation();
 
 var app = builder.Build();
 
-if (useFakeEmbeddings)
+if (useFakeAi)
 {
-    app.Logger.LogWarning("OpenAI:ApiKey not set - using DeterministicEmbeddingGenerator (dev only, no real semantics)");
+    app.Logger.LogWarning("OpenAI:ApiKey not set - using deterministic embedding/chat stand-ins (dev only, no real semantics)");
 }
 
 if (!app.Environment.IsDevelopment())

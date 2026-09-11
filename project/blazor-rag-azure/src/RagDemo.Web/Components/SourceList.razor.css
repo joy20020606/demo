@@ -1,0 +1,8 @@
+.src { margin-top: .5rem; font-size: .85rem; }
+.src summary { cursor: pointer; color: #0d6efd; }
+.src ol { margin: .4rem 0 0; padding-left: 1.2rem; }
+.src li { margin-bottom: .35rem; }
+.src-file { font-weight: 600; }
+.src-meta { color: #6c757d; margin-left: .4rem; }
+.src-snippet { color: #495057; }
+.src-empty { margin-top: .5rem; font-size: .85rem; color: #6c757d; }

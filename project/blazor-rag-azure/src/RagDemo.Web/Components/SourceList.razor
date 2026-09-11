@@ -1,0 +1,27 @@
+@using RagDemo.Web.Services
+
+@if (Sources.Count == 0)
+{
+    <div class="src-empty">沒有相似度足夠的段落</div>
+}
+else
+{
+    <details class="src" open="@Open">
+        <summary>引用來源(@Sources.Count)</summary>
+        <ol>
+            @foreach (var s in Sources)
+            {
+                <li>
+                    <span class="src-file">@s.SourceFile</span>
+                    <span class="src-meta">#@s.ChunkIndex · 距離 @s.Distance.ToString("0.000")</span>
+                    <div class="src-snippet">@s.Snippet</div>
+                </li>
+            }
+        </ol>
+    </details>
+}
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<Citation> Sources { get; set; } = [];
+    [Parameter] public bool Open { get; set; }
+}
