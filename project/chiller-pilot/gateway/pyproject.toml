@@ -1,0 +1,35 @@
+[project]
+name = "chiller-pilot-gateway"
+version = "0.1.0"
+description = "Site gateway for chiller-pilot: polls devices and publishes telemetry over MQTT"
+requires-python = ">=3.12"
+dependencies = [
+    "pymodbus==3.16.1",
+    "aiomqtt==2.5.1",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "pytest-asyncio>=0.24", "ruff>=0.7"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["gw"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"

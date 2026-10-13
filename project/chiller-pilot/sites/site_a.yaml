@@ -1,0 +1,19 @@
+site_id: site_a
+protocol: modbus_tcp
+host: simulator-a
+port: 5020
+device_id: 1
+poll_interval_seconds: 10
+
+points:
+  - { name: chw_supply_temp, address: 0, scale: 0.1, unit: degC }
+  - { name: chw_return_temp, address: 1, scale: 0.1, unit: degC }
+  - { name: cw_supply_temp, address: 2, scale: 0.1, unit: degC }
+  - { name: outdoor_temp, address: 3, scale: 0.1, unit: degC }
+  - { name: cooling_load, address: 8, scale: 1, unit: kW }
+  - { name: chiller_power, address: 9, scale: 0.1, unit: kW }
+  - { name: chw_pump_power, address: 10, scale: 0.1, unit: kW }
+  - { name: ct_fan_power, address: 11, scale: 0.1, unit: kW }
+  - { name: total_power, address: 12, scale: 0.1, unit: kW }
+  - { name: chw_setpoint, address: 20, scale: 0.1, unit: degC }
+  - { name: ct_fan_speed, address: 21, scale: 1, unit: pct }

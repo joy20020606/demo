@@ -1,0 +1,44 @@
+name: chiller-pilot-site
+
+x-gateway: &gateway
+  build: ./gateway
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  restart: unless-stopped
+
+services:
+  simulator-a:
+    build: ./simulator
+    environment:
+      SIM_PROFILE: profiles/site_a.yaml
+    ports:
+      - "${SIM_A_PORT:-5020}:5020"
+    restart: unless-stopped
+
+  simulator-b:
+    build: ./simulator
+    environment:
+      SIM_PROFILE: profiles/site_b.yaml
+    ports:
+      - "${SIM_B_PORT:-5021}:5020"
+    restart: unless-stopped
+
+  gateway-a:
+    <<: *gateway
+    environment:
+      GW_MQTT_HOST: ${MQTT_HOST:-host.docker.internal}
+      GW_MQTT_PORT: ${MQTT_PORT:-1883}
+    volumes:
+      - ./sites/site_a.yaml:/app/sites/site.yaml:ro
+    depends_on:
+      - simulator-a
+
+  gateway-b:
+    <<: *gateway
+    environment:
+      GW_MQTT_HOST: ${MQTT_HOST:-host.docker.internal}
+      GW_MQTT_PORT: ${MQTT_PORT:-1883}
+    volumes:
+      - ./sites/site_b.yaml:/app/sites/site.yaml:ro
+    depends_on:
+      - simulator-b

@@ -1,0 +1,38 @@
+site_id: site_a
+device_id: 1
+time_scale: 60
+start_hour: 8
+noise: 0.01
+
+model:
+  design_load_kw: 1000
+  cop_ref: 5.0
+  cop_per_chw_degc: 0.03
+  cop_per_cw_degc: 0.025
+  pump_rated_kw: 30
+  fan_rated_kw: 20
+  approach_min_degc: 3.0
+  approach_gain_degc: 4.0
+  outdoor_mean_degc: 25
+  outdoor_swing_degc: 4
+
+defaults:
+  chw_setpoint: 7.0
+  ct_fan_speed: 100
+
+registers:
+  - { name: chw_supply_temp, address: 0, scale: 0.1 }
+  - { name: chw_return_temp, address: 1, scale: 0.1 }
+  - { name: cw_supply_temp, address: 2, scale: 0.1 }
+  - { name: outdoor_temp, address: 3, scale: 0.1 }
+  - { name: cooling_load, address: 8, scale: 1 }
+  - { name: chiller_power, address: 9, scale: 0.1 }
+  - { name: chw_pump_power, address: 10, scale: 0.1 }
+  - { name: ct_fan_power, address: 11, scale: 0.1 }
+  - { name: total_power, address: 12, scale: 0.1 }
+  - { name: chw_setpoint, address: 20, scale: 0.1 }
+  - { name: ct_fan_speed, address: 21, scale: 1 }
+
+faults:
+  sensor_stuck: 0
+  scale_error: 1
