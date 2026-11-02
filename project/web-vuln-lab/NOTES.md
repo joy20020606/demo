@@ -79,3 +79,5 @@ docker compose down -v           # 整組銷毀
 
 > 本機 Docker 為 per-user 安裝,`docker` 可能不在 PATH,跑前先補:
 > `$env:PATH = "C:\Users\JOY\AppData\Local\Programs\DockerDesktop\resources\bin;$env:PATH"`
+
+<!-- skip-deploy 測試:2026-11-02 -->
