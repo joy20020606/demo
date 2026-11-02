@@ -81,3 +81,4 @@ docker compose down -v           # 整組銷毀
 > `$env:PATH = "C:\Users\JOY\AppData\Local\Programs\DockerDesktop\resources\bin;$env:PATH"`
 
 <!-- skip-deploy 測試:2026-11-02 -->
+<!-- retest 14:43:30 -->
