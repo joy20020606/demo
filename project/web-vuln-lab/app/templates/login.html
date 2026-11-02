@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>登入</h2>
+  <form method="post">
+    <label>帳號</label>
+    <input name="username" autofocus>
+    <label>密碼</label>
+    <input name="password" type="password">
+    <button type="submit">登入</button>
+  </form>
+  <p class="warn">測試帳密:admin / password123</p>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+services:
+  # 漏洞版(預設)— 攻擊練習與 Cairn 目標
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"   # 只綁本機
+    restart: unless-stopped
+
+  # 安全版 — 同一份程式,SECURE=1 切換成正確寫法,用來做前後對照
+  web-secure:
+    build: .
+    environment:
+      - SECURE=1
+    ports:
+      - "127.0.0.1:8081:8080"   # 只綁本機
+    restart: unless-stopped
