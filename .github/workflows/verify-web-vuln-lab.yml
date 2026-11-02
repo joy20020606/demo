@@ -1,0 +1,50 @@
+name: Verify web-vuln-lab
+
+on:
+  pull_request:
+    paths:
+      - 'project/web-vuln-lab/**'
+      - '.github/workflows/verify-web-vuln-lab.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'project/web-vuln-lab/**'
+      - '.github/workflows/verify-web-vuln-lab.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: project/web-vuln-lab
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 啟動漏洞版 + 安全版容器
+        run: docker compose up --build -d
+
+      - name: 等兩個實例就緒
+        run: |
+          for i in $(seq 1 30); do
+            if python3 .claude/skills/verify-web-vuln-lab/drive.py doctor; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "容器逾時未就緒"
+          exit 1
+
+      - name: 對照驗證（七關 × 漏洞/安全）
+        run: python3 .claude/skills/verify-web-vuln-lab/drive.py check-all
+
+      - name: 保留驗證證據
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-evidence
+          path: project/web-vuln-lab/_evidence/
+          if-no-files-found: ignore
+
+      - name: 收掉容器
+        if: always()
+        run: docker compose down -v
