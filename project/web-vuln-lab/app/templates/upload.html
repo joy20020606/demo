@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>檔案上傳</h2>
+  <form method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button type="submit">上傳</button>
+  </form>
+  {% if saved %}<div class="flash">已上傳:{{ saved }}</div>{% endif %}
+  {% if files %}
+    <h3>已上傳檔案</h3>
+    <ul>{% for f in files %}<li><a href="/uploads/{{ f }}">{{ f }}</a></li>{% endfor %}</ul>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Web 弱點靶機實驗室</h2>
+  {% if secure %}
+    <p style="color:#5fd38d"><b>🛡️ SECURE 模式(安全版)— 攻擊應該會失敗</b></p>
+  {% else %}
+    <p style="color:#e0b050"><b>💣 漏洞版 — 攻擊會成功</b></p>
+  {% endif %}
+  {% if user %}
+    <p>已登入:<b>{{ user }}</b>(role: {{ role }})</p>
+  {% else %}
+    <p>尚未登入。請先 <a href="/login">登入</a>。</p>
+  {% endif %}
+
+  <h3>弱點頁面</h3>
+  <ul>
+    <li><a href="/login">/login</a> — SQLi + 認證繞過</li>
+    <li><a href="/search?q=welcome">/search</a> — SQL Injection</li>
+    <li><a href="/upload">/upload</a> — 不安全檔案上傳</li>
+    <li><a href="/profile?name=guest">/profile</a> — SSTI 模板注入</li>
+    <li><a href="/api/load">/api/load</a> — 不安全反序列化</li>
+    <li><a href="/greet?name=guest">/greet</a> — 反射型 XSS</li>
+  </ul>
+  <p>🎯 目標:拿到 <a href="/flag">/flag</a>(需要 admin)</p>
+</div>
+{% endblock %}

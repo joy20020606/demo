@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+{{ body|safe }}
+<div class="card" style="margin-top:12px">
+  <form method="get">
+    <label>name 參數</label>
+    <input name="name" value="{{ name }}">
+    <button type="submit">送出</button>
+  </form>
+  <p class="warn">試試 ?name={{ '{{7*7}}' }}</p>
+</div>
+{% endblock %}

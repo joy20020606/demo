@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>載入資料(反序列化)</h2>
+  <p>貼上 base64 編碼的 pickle 資料:</p>
+  <form method="post">
+    <textarea name="data" rows="4" style="width:100%"></textarea>
+    <button type="submit">載入</button>
+  </form>
+  {% if result %}<div class="flash" style="word-break:break-all">{{ result }}</div>{% endif %}
+</div>
+{% endblock %}

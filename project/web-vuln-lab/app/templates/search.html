@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>筆記搜尋</h2>
+  <form method="get">
+    <input name="q" value="{{ q }}" placeholder="輸入關鍵字">
+    <button type="submit">搜尋</button>
+  </form>
+  {% if error %}<div class="flash">SQL 錯誤:{{ error }}</div>{% endif %}
+  {% if rows %}
+    <table border="1" cellpadding="6" style="margin-top:12px;border-collapse:collapse;width:100%">
+      {% for r in rows %}<tr><td>{{ r[0] }}</td><td>{{ r[1] }}</td></tr>{% endfor %}
+    </table>
+  {% elif q %}
+    <p>沒有結果。</p>
+  {% endif %}
+</div>
+{% endblock %}
